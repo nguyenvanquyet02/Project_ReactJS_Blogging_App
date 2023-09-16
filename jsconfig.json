@@ -1,0 +1,6 @@
+// tao duong dan gon gang hon
+{
+    "compilerOptions": {
+        "baseUrl": "./src"
+    }
+}
