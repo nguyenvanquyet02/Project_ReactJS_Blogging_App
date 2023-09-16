@@ -2,7 +2,7 @@ import IconEyeOpen from '../icons/IconEyeOpen';
 import React from 'react';
 import { useController } from 'react-hook-form';
 import styled from 'styled-components';
-
+import PropTypes from 'prop-types';
 
 const InputStyles = styled.div`
   position: relative;
@@ -13,7 +13,7 @@ const InputStyles = styled.div`
   input {
     width: 100%;
     padding: ${(props) =>
-        props.hasIcon ? "16px 60px 16px 20px" : "16px 20px"};
+    props.hasIcon ? "16px 60px 16px 20px" : "16px 20px"};
     background-color: transparent;
     border: 1px solid ${(props) => props.theme.grayf1};
     border-radius: 8px;
@@ -45,19 +45,32 @@ const InputStyles = styled.div`
     padding: 8px;
   }
 `;
+/**
+ * Created by Celine Maris
+ * @param {*} control control of react hook form
+ * @param {string} type type of input
+ * @requires
+ * @param {string} name name of input 
+ * @returns 
+ */
 const Input = ({ name = "", type = "text", children,
-    control, ...props }) => {
-    const { field } = useController({
-        control,
-        name,
-        defaultValue: ""
-    })
-    return (
-        <InputStyles hasIcon={children ? true : false}>
-            <input type={type} id={name} {...field} {...props} />
-            {children ? <div className='input-icon'>{children}</div> : null}
-        </InputStyles>
-    );
+  control, ...props }) => {
+  const { field } = useController({
+    control,
+    name,
+    defaultValue: ""
+  })
+  return (
+    <InputStyles hasIcon={children ? true : false}>
+      <input type={type} id={name} {...field} {...props} />
+      {children ? <div className='input-icon'>{children}</div> : null}
+    </InputStyles>
+  );
 };
-
+Input.prototype = {
+  name: PropTypes.string.isRequired,
+  type: PropTypes.string,
+  children: PropTypes.node,
+  control: PropTypes.object.isRequired
+}
 export default Input;
