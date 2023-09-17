@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../contexts/auth-context';
 import { NavLink, useNavigate } from 'react-router-dom';
 import AuthenticationPage from './AuthenticationPage';
-import { Button, Field, IconEyeClose, IconEyeOpen, Input, Label } from '../components';
+import { Button, Field, Input, Label } from '../components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { toast } from 'react-toastify';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebase-config';
+import InputPasswordToggle from '../components/base/input/InputPasswordToggle';
 
 
 const schema = yup.object({
@@ -16,7 +17,6 @@ const schema = yup.object({
     password: yup.string().min(8, "Your password must be at least 8 characters").required("Please enter your password!"),
 }).required();
 const SignInPage = () => {
-    const [togglePassword, setTogglePassword] = useState(false);
     const { userInfo } = useAuth();
     const navigate = useNavigate();
     const { control, handleSubmit, formState: {
@@ -58,15 +58,7 @@ const SignInPage = () => {
                 </Field>
                 <Field>
                     <Label htmlFor='password'>Password</Label>
-                    <Input name='password'
-                        type={togglePassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        control={control}
-                    >
-                        {togglePassword ?
-                            <IconEyeOpen onClick={() => setTogglePassword(!togglePassword)} /> :
-                            <IconEyeClose onClick={() => setTogglePassword(!togglePassword)} />}
-                    </Input>
+                    <InputPasswordToggle control={control}></InputPasswordToggle>
                 </Field>
                 <Button
                     type='submit'
