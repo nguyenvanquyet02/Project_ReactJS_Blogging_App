@@ -11,3 +11,8 @@ export { default as Header } from './layouts/Header';
 export { default as HomeBanner } from './module/home/HomeBanner';
 export { default as HomeFeature } from './module/home/HomeFeature';
 export { default as HomeNewest } from './module/home/HomeNewest';
+export { default as Radio } from './base/checkbox/Radio';
+export { default as Checkbox } from './base/checkbox/Checkbox';
+export { default as Pagination } from './base/pagination/Pagination';
+export { default as Table } from './base/table/Table';
+export { default as Toggle } from './base/toggle/Toggle';

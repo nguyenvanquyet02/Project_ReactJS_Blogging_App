@@ -33,6 +33,7 @@ const HomeNewest = () => {
             <PostNewestItem></PostNewestItem>
           </div>
         </div>
+        <Heading>Blog liên quan</Heading>
         <div className="grid-layout grid-layout--primary">
           <PostItem></PostItem>
           <PostItem></PostItem>
