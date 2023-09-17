@@ -5,3 +5,4 @@ export { default as IconEyeOpen } from './icons/IconEyeOpen';
 export { default as Field } from './field/Field';
 export { default as Button } from './button/Button';
 export { default as LoadingSpinner } from './loading/LoadingSpinner';
+export { default as Header } from './layouts/Header';
