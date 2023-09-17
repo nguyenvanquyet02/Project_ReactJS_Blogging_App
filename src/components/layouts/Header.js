@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from '../button/Button';
+import Button from '../base/button/Button';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth-context';
 
@@ -100,7 +100,7 @@ const Header = () => {
                 <div className='header-main'>
                     <div className='logo-container'>
                         <NavLink to='/'>
-                            <img srcSet='/logo.png 18x' alt='logo' className='logo' />
+                            <img srcSet='/logo.png 3x' alt='logo' className='logo' />
                         </NavLink>
                         <p className='title-logo'>Blogging App</p>
                     </div>
@@ -150,7 +150,7 @@ const Header = () => {
                                 </svg>
                             </span>
                         </div>
-                        {!userInfo ? <Button to="/sign-up" style={{ width: "120px", height: "44px" }} primary>SignUp</Button>
+                        {!userInfo ? <Button to="/sign-up" style={{ width: "120px", height: "44px" }} kind='primary'>SignUp</Button>
                             : <div className='header-auth'>
                                 {getLastName(userInfo?.displayName)}
                             </div>}
