@@ -16,3 +16,4 @@ export { default as Checkbox } from './base/checkbox/Checkbox';
 export { default as Pagination } from './base/pagination/Pagination';
 export { default as Table } from './base/table/Table';
 export { default as Toggle } from './base/toggle/Toggle';
+export { default as ImageUpload } from './base/image/ImageUpload';
