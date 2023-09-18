@@ -13,9 +13,10 @@ const LabelStyles = styled.label`
  * @param {string} htmlFor  
  * @returns 
  */
-const Label = ({ htmlFor = "", children, ...props }) => {
+const Label = ({ htmlFor = "", children, className = "", ...props }) => {
     return (
         <LabelStyles
+            className={className}
             htmlFor={htmlFor}
             {...props}
         >

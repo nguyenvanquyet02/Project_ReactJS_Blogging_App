@@ -1,84 +1,91 @@
-import { Button, Input, Label, Field, Radio, ImageUpload } from "../../index";
+import React, { useEffect, useState } from "react";
+import { Button, Input, Label, Field, Radio, ImageUpload, Toggle } from "../../index";
 import { Dropdown } from "../../base/dropdown";
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from 'slugify'
 import { postStatus } from "../../../utils/constants";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../../firebase/firebase-config";
+import { useFirebaseImage } from "../../../hooks";
+import { useAuth } from "../../../contexts/auth-context";
+import { toast } from "react-toastify";
 
 const PostAddNewStyles = styled.div``;
-// storage firebase
-const storage = getStorage();
 const PostAddNew = () => {
-  const [progress, setProgress] = useState(0);
-  const [image, setImage] = useState("");
-  const { control, watch, setValue, handleSubmit } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
       slug: "",
-      image: "",
-      author: "",
       status: 2,
-      category: "",
+      categoryId: "",
+      author: "",
+      hot: false,
+      image: ""
     },
   });
+  const { userInfo } = useAuth();
+  const [categories, setCategoties] = useState([]);
+  const [selectCategory, setSelectCategoty] = useState("");
+  const watchStatus = watch("status");
+  const watchHot = watch("hot");
+  const watchCategory = watch("category");
+
+  //custom hook is used for handling firebase image
+  const {
+    image,
+    handleResetImage,
+    progress,
+    handleSelectImage,
+    handleDeleteImage
+  } = useFirebaseImage(setValue, getValues);
+
+  // get categories data
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "categories")
+      const q = query(colRef, where("status", "==", 1))
+      const querySnapshot = await getDocs(q);
+      let result = [];
+      querySnapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      });
+      setCategoties(result);
+    }
+    getData();
+  }, [])
   // this function is used for submitting form add new post image
   const addPostHandler = async (values) => {
-    values.slug = slugify(values.title || values.slug);
+    values.slug = slugify(values.title || values.slug, { lower: true });
     values.status = +values.status;
-    // const colRef = collection(db, "posts");
-    // await addDoc(colRef, {
-    //   title: "",
-    //   slug: "",
-    //   image: "",
-    //   author: "",
-    //   status: 2,
-    //   category: "",
-    // })
-    // handleUploadImage(values.image);
+    const colRef = collection(db, "posts");
+    await addDoc(colRef, {
+      ...values,
+      image,
+      userId: userInfo.uid,
+    })
+    toast.success("Create new post successfully!!!");
+    reset({
+      title: "",
+      slug: "",
+      status: 2,
+      categoryId: "",
+      author: "",
+      hot: false,
+      image: ""
+    });
+    handleResetImage();
+    setSelectCategoty({});
   }
-  // this function is used for loading image return downloadURL
-  const handleUploadImage = (file) => {
-    const storageRef = ref(storage, "images/" + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on("state_changed", (snapshot) => {
-      const progressPercent = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log("Upload is " + progressPercent + "% done");
-      setProgress(progressPercent);
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused!");
-          break;
-        case "running":
-          console.log("Upload is running!");
-          break;
-        default:
-          console.log("Nothing at all!!!");
-          break;
-      }
-    },
-      (error) => {
-        console.log("ERROR: ", error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at ", downloadURL);
-          setImage(downloadURL);
-        })
-      })
+  //this func is used for selecting item for dropdown
+  const handleClickOptionDropdown = (item) => {
+    setValue("categoryId", item.id);
+    setSelectCategoty(item)
   }
-  // this function is used for selecting image and setValue image field
-  const handleOnSelectImage = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setValue("image", file)
-    handleUploadImage(file);
-  }
-  const watchStatus = watch("status");
-  const watchCategory = watch("category");
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Add new post</h1>
@@ -105,41 +112,66 @@ const PostAddNew = () => {
         <div className="grid grid-cols-2 gap-x-10 mb-2">
           <Field>
             <Label>Image</Label>
-            <ImageUpload name="image" onChange={handleOnSelectImage} progress={progress} image={image} />
+            <ImageUpload name="image" onChange={handleSelectImage} progress={progress} image={image} handleDeleteImage={handleDeleteImage} />
           </Field>
-          <Field>
-            <Label>Status</Label>
-            <div className="flex items-center gap-x-5">
-              <Radio
-                name="status"
-                control={control}
-                checked={+watchStatus === postStatus.APPROVED}
-                onClick={() => setValue("status", "approved")}
-                value={postStatus.APPROVED}
-              >
-                Approved
-              </Radio>
-              <Radio
-                name="status"
-                control={control}
-                checked={+watchStatus === postStatus.PENDING}
-                onClick={() => setValue("status", "pending")}
-                value={postStatus.PENDING}
-              >
-                Pending
-              </Radio>
-              <Radio
-                name="status"
-                control={control}
-                checked={+watchStatus === postStatus.REJECTED}
-                onClick={() => setValue("status", "reject")}
-                value={postStatus.REJECTED}
-              >
-                Reject
-              </Radio>
+          <div>
+            <Field>
+              <Label>Status</Label>
+              <div className="flex items-center gap-x-5">
+                <Radio
+                  name="status"
+                  control={control}
+                  checked={+watchStatus === postStatus.APPROVED}
+                  onClick={() => setValue("status", "approved")}
+                  value={postStatus.APPROVED}
+                >
+                  Approved
+                </Radio>
+                <Radio
+                  name="status"
+                  control={control}
+                  checked={+watchStatus === postStatus.PENDING}
+                  onClick={() => setValue("status", "pending")}
+                  value={postStatus.PENDING}
+                >
+                  Pending
+                </Radio>
+                <Radio
+                  name="status"
+                  control={control}
+                  checked={+watchStatus === postStatus.REJECTED}
+                  onClick={() => setValue("status", "reject")}
+                  value={postStatus.REJECTED}
+                >
+                  Reject
+                </Radio>
+              </div>
+            </Field>
+            <div className="flex justify-between items-center">
+              <Field>
+                <Label>Feature post</Label>
+                <Toggle on={watchHot === true} onClick={() => setValue("hot", !watchHot)}></Toggle>
+              </Field>
+              <Field>
+                <div className="w-[300px]">
+                  <Label className="mb-2 inline-block">Category</Label>
+                  <Dropdown >
+                    <Dropdown.Select placeholder={`${selectCategory?.name || "Select category"}`}></Dropdown.Select>
+                    <Dropdown.List>
+                      {categories?.length > 0 && categories.map(category => (
+                        <Dropdown.Option
+                          key={category.id}
+                          onClick={() => handleClickOptionDropdown(category)}
+                        >
+                          {category.name}
+                        </Dropdown.Option>
+                      ))}
+                    </Dropdown.List>
+                  </Dropdown>
+                </div>
+              </Field>
             </div>
-          </Field>
-
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-2">
           <Field>
@@ -147,14 +179,14 @@ const PostAddNew = () => {
             <Input control={control} placeholder="Find the author" name="author"></Input>
           </Field>
           <Field>
-            <Label>Category</Label>
-            <Dropdown>
+            <Label>Feature post</Label>
+            {/* <Dropdown>
               <Dropdown.Option>Knowledge</Dropdown.Option>
               <Dropdown.Option>Blockchain</Dropdown.Option>
               <Dropdown.Option>Setup</Dropdown.Option>
               <Dropdown.Option>Nature</Dropdown.Option>
               <Dropdown.Option>Developer</Dropdown.Option>
-            </Dropdown>
+            </Dropdown> */}
           </Field>
 
         </div>
