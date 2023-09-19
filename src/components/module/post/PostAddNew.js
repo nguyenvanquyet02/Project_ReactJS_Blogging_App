@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from 'slugify'
 import { postStatus } from "../../../utils/constants";
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, serverTimestamp, where } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
 import { useFirebaseImage } from "../../../hooks";
 import { useAuth } from "../../../contexts/auth-context";
@@ -20,7 +20,6 @@ const PostAddNew = () => {
       slug: "",
       status: 2,
       categoryId: "",
-      author: "",
       hot: false,
       image: ""
     },
@@ -67,6 +66,7 @@ const PostAddNew = () => {
       ...values,
       image,
       userId: userInfo.uid,
+      createdAt: serverTimestamp,
     })
     toast.success("Create new post successfully!!!");
     reset({
@@ -74,7 +74,6 @@ const PostAddNew = () => {
       slug: "",
       status: 2,
       categoryId: "",
-      author: "",
       hot: false,
       image: ""
     });
@@ -174,10 +173,10 @@ const PostAddNew = () => {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-2">
-          <Field>
+          {/* <Field>
             <Label>Author</Label>
             <Input control={control} placeholder="Find the author" name="author"></Input>
-          </Field>
+          </Field> */}
           <Field>
             <Label>Feature post</Label>
             {/* <Dropdown>
