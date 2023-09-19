@@ -27,9 +27,9 @@ const PostAddNew = () => {
   const { userInfo } = useAuth();
   const [categories, setCategoties] = useState([]);
   const [selectCategory, setSelectCategoty] = useState("");
+  const [loading, setLoading] = useState(false);
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-  const watchCategory = watch("category");
 
   //custom hook is used for handling firebase image
   const {
@@ -42,6 +42,7 @@ const PostAddNew = () => {
 
   // get categories data
   useEffect(() => {
+    document.title = "Blogging App - Add new post"
     async function getData() {
       const colRef = collection(db, "categories")
       const q = query(colRef, where("status", "==", 1))
@@ -59,26 +60,36 @@ const PostAddNew = () => {
   }, [])
   // this function is used for submitting form add new post image
   const addPostHandler = async (values) => {
-    values.slug = slugify(values.title || values.slug, { lower: true });
-    values.status = +values.status;
-    const colRef = collection(db, "posts");
-    await addDoc(colRef, {
-      ...values,
-      image,
-      userId: userInfo.uid,
-      createdAt: serverTimestamp,
-    })
-    toast.success("Create new post successfully!!!");
-    reset({
-      title: "",
-      slug: "",
-      status: 2,
-      categoryId: "",
-      hot: false,
-      image: ""
-    });
-    handleResetImage();
-    setSelectCategoty({});
+    setLoading(true);
+    try {
+      values.slug = slugify(values.title || values.slug, { lower: true });
+      values.status = +values.status;
+      const colRef = collection(db, "posts");
+      await addDoc(colRef, {
+        ...values,
+        image,
+        userId: userInfo.uid,
+        createdAt: serverTimestamp(),
+      })
+      toast.success("Create new post successfully!!!");
+      reset({
+        title: "",
+        slug: "",
+        status: 2,
+        categoryId: "",
+        hot: false,
+        image: ""
+      });
+      // reset image
+      handleResetImage();
+      setSelectCategoty({});
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
   }
   //this func is used for selecting item for dropdown
   const handleClickOptionDropdown = (item) => {
@@ -189,7 +200,12 @@ const PostAddNew = () => {
           </Field>
 
         </div>
-        <Button type="submit" className="mx-auto">
+        <Button
+          type="submit"
+          className="mx-auto"
+          isLoading={loading}
+          disabled={loading}
+        >
           Add new post
         </Button>
       </form>
