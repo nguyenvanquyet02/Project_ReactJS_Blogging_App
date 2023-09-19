@@ -150,6 +150,9 @@ const Header = () => {
                                 </svg>
                             </span>
                         </div>
+                        <Button
+                            to="/dashboard"
+                            style={{ width: "140px", height: "44px" }}>Dashboard</Button>
                         {!userInfo ? <Button to="/sign-up" style={{ width: "120px", height: "44px" }} kind='primary'>SignUp</Button>
                             : <div className='header-auth'>
                                 {getLastName(userInfo?.displayName)}

@@ -15,8 +15,14 @@ export const theme = {
     white: "#fff"
 };
 
+//post status
 export const postStatus = {
-    "APPROVED": 1,
-    "PENDING": 2,
-    "REJECTED": 3
+    APPROVED: 1, // phê duyệt
+    PENDING: 2, // chờ
+    REJECTED: 3 // từ chối
+}
+// category status 
+export const categoryStatus = {
+    APPROVED: 1, // phê duyệt
+    UNAPPROVED: 2 // chưa được phê duyệt
 }

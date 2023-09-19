@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 
 const PostAddNewStyles = styled.div``;
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues, reset, formState: { isValid, isSubmitting } } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -27,7 +27,6 @@ const PostAddNew = () => {
   const { userInfo } = useAuth();
   const [categories, setCategoties] = useState([]);
   const [selectCategory, setSelectCategoty] = useState("");
-  const [loading, setLoading] = useState(false);
   const watchStatus = watch("status");
   const watchHot = watch("hot");
 
@@ -60,7 +59,7 @@ const PostAddNew = () => {
   }, [])
   // this function is used for submitting form add new post image
   const addPostHandler = async (values) => {
-    setLoading(true);
+    if (!isValid) return;
     try {
       values.slug = slugify(values.title || values.slug, { lower: true });
       values.status = +values.status;
@@ -75,7 +74,7 @@ const PostAddNew = () => {
       reset({
         title: "",
         slug: "",
-        status: 2,
+        status: postStatus.PENDING,
         categoryId: "",
         hot: false,
         image: ""
@@ -84,10 +83,8 @@ const PostAddNew = () => {
       handleResetImage();
       setSelectCategoty({});
     } catch (error) {
-      setLoading(false);
       console.log(error);
     } finally {
-      setLoading(false);
     }
 
   }
@@ -107,7 +104,7 @@ const PostAddNew = () => {
               control={control}
               placeholder="Enter your title"
               name="title"
-
+              required
             ></Input>
           </Field>
           <Field>
@@ -124,7 +121,7 @@ const PostAddNew = () => {
             <Label>Image</Label>
             <ImageUpload name="image" onChange={handleSelectImage} progress={progress} image={image} handleDeleteImage={handleDeleteImage} />
           </Field>
-          <div>
+          <div className="flex flex-col gap-y-8">
             <Field>
               <Label>Status</Label>
               <div className="flex items-center gap-x-5">
@@ -132,7 +129,6 @@ const PostAddNew = () => {
                   name="status"
                   control={control}
                   checked={+watchStatus === postStatus.APPROVED}
-                  onClick={() => setValue("status", "approved")}
                   value={postStatus.APPROVED}
                 >
                   Approved
@@ -141,7 +137,6 @@ const PostAddNew = () => {
                   name="status"
                   control={control}
                   checked={+watchStatus === postStatus.PENDING}
-                  onClick={() => setValue("status", "pending")}
                   value={postStatus.PENDING}
                 >
                   Pending
@@ -150,7 +145,6 @@ const PostAddNew = () => {
                   name="status"
                   control={control}
                   checked={+watchStatus === postStatus.REJECTED}
-                  onClick={() => setValue("status", "reject")}
                   value={postStatus.REJECTED}
                 >
                   Reject
@@ -183,28 +177,11 @@ const PostAddNew = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-2">
-          {/* <Field>
-            <Label>Author</Label>
-            <Input control={control} placeholder="Find the author" name="author"></Input>
-          </Field> */}
-          <Field>
-            <Label>Feature post</Label>
-            {/* <Dropdown>
-              <Dropdown.Option>Knowledge</Dropdown.Option>
-              <Dropdown.Option>Blockchain</Dropdown.Option>
-              <Dropdown.Option>Setup</Dropdown.Option>
-              <Dropdown.Option>Nature</Dropdown.Option>
-              <Dropdown.Option>Developer</Dropdown.Option>
-            </Dropdown> */}
-          </Field>
-
-        </div>
         <Button
           type="submit"
-          className="mx-auto"
-          isLoading={loading}
-          disabled={loading}
+          className="mx-auto mt-10"
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
         >
           Add new post
         </Button>

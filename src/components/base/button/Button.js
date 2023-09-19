@@ -49,6 +49,7 @@ const ButtonStyles = styled.button`
 const Button = ({ type = "button",
     onClick = () => { },
     children,
+    className = "",
     kind = 'primary',
     ...props }) => {
     const { isLoading, to } = props;
@@ -63,7 +64,7 @@ const Button = ({ type = "button",
         )
     }
     return (
-        <ButtonStyles type={type} onClick={onClick} kind={kind} {...props}>
+        <ButtonStyles type={type} onClick={onClick} className={className} kind={kind} {...props}>
             {child}
         </ButtonStyles>
     );

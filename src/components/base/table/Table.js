@@ -19,6 +19,9 @@ const TableStyles = styled.div`
     font-weight: 600;
     text-align: left;
   }
+  tr{
+    border-bottom: 1px solid #eee;
+  }
   td {
     padding: 15px 30px;
   }
