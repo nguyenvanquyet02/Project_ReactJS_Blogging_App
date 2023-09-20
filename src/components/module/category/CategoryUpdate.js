@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import slugify from "slugify";
-import Swal from "sweetalert2";
 import { DashboardHeading } from "../dashboard";
 import { categoryStatus } from "../../../utils/constants";
 import { Button, Field, FieldCheckboxes, Input, Label, Radio } from "../../index";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../../firebase/firebase-config";
 
 const CategoryUpdate = () => {
   const { control, watch, reset, handleSubmit, formState: { isValid, isSubmitting } } = useForm({
@@ -21,13 +22,36 @@ const CategoryUpdate = () => {
   const [params] = useSearchParams();
   const categoryId = params.get("id");
   const watchStatus = watch("status");
-  useEffect(() => {
+  const navigate = useNavigate();
 
-  }, [])
+  // get data category
+  useEffect(() => {
+    async function getDataCategory() {
+      const colRef = doc(db, "categories", categoryId);
+      const category = await getDoc(colRef);
+      // reset cac truong ui ve cac gia tri lay duoc
+      reset(category.data());
+    }
+    getDataCategory();
+  }, [categoryId, reset])
   if (!categoryId) return null;
+
   // this func is used for updating category
-  const handleUpdateCategory = async (categoryId) => {
+  const handleUpdateCategory = async (values) => {
     if (!isValid) return;
+    try {
+      const colRef = doc(db, "categories", categoryId);
+      await updateDoc(colRef, {
+        name: values.name,
+        slug: slugify(values.slug || values.name, { lower: true }),
+        status: +values.status
+      })
+      toast.success("Update category successfully!!!");
+      navigate("/manage/category");
+    } catch (error) {
+      toast.error("Update category failed!!!");
+      console.log(error);
+    }
   }
   return (
     <div>
@@ -85,7 +109,7 @@ const CategoryUpdate = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Add new category
+          Update category
         </Button>
       </form>
     </div>

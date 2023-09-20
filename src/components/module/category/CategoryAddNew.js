@@ -28,7 +28,7 @@ const CategoryAddNew = () => {
   const handleAddNewCategory = async (values) => {
     if (!isValid) return;
     values.status = +values.status;
-    values.slug = slugify(values.name, { lower: true });
+    values.slug = slugify(values.slug || values.name, { lower: true });
     const colRef = collection(db, "categories");
     try {
       await addDoc(colRef, {

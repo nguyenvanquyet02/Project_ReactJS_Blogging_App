@@ -6,18 +6,19 @@ const PostManage = () => {
     <div>
       <div className="flex justify-between">
         <h1 className="dashboard-heading">Manage post</h1>
-        <div className="mb-10">
-          <div className="w-full max-w-[300px]">
-            <input
-              type="text"
-              className="w-full p-4 rounded-lg border border-solid border-gray-300"
-              placeholder="Search post..."
-            />
-          </div>
-        </div>
+
         <Button to="/manage/add-post" className="header-button" height="52px">
           Write new post
         </Button>
+      </div>
+      <div className="mb-6 flex justify-end">
+        <div className="w-full max-w-[300px]">
+          <input
+            type="text"
+            className="w-full p-4 rounded-lg border border-solid border-gray-300"
+            placeholder="Search post..."
+          />
+        </div>
       </div>
       <Table>
         <thead>

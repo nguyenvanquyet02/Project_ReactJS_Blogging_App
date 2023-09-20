@@ -84,9 +84,7 @@ const PostAddNew = () => {
       setSelectCategoty({});
     } catch (error) {
       console.log(error);
-    } finally {
     }
-
   }
   //this func is used for selecting item for dropdown
   const handleClickOptionDropdown = (item) => {
