@@ -153,7 +153,7 @@ const Header = () => {
                         <Button
                             to="/dashboard"
                             style={{ width: "140px", height: "44px" }}>Dashboard</Button>
-                        {!userInfo ? <Button to="/sign-up" style={{ width: "120px", height: "44px" }} kind='primary'>SignUp</Button>
+                        {!userInfo ? <Button to="/sign-in" style={{ width: "120px", height: "44px" }} kind='primary'>Login</Button>
                             : <div className='header-auth'>
                                 {getLastName(userInfo?.displayName)}
                             </div>}

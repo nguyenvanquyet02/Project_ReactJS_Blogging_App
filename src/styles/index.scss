@@ -126,7 +126,7 @@ a {
   white-space: nowrap;
 }
 .form-layout {
-  @apply lg:gap-x-10 mb-5 lg:mb-10;
+  @apply grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 mb-5 lg:mb-10;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover,

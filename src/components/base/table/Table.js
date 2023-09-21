@@ -8,11 +8,16 @@ const TableStyles = styled.div`
     width: 100%;
   }
   thead {
+    position: sticky;
+    z-index: 1;
+    top: 0;
+    left: 0;
     background-color: #f7f7f8;
   }
   th,
   td {
     vertical-align: middle;
+    white-space: nowrap;
   }
   th {
     padding: 20px 30px;

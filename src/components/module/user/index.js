@@ -1,0 +1,5 @@
+export { default as UserAddNew } from './UserAddNew'
+export { default as UserManage } from './UserManage'
+export { default as UserProfile } from './UserProfile'
+export { default as UserTable } from './UserTable'
+export { default as UserUpdate } from './UserUpdate'

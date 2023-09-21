@@ -59,7 +59,7 @@ const CategoryAddNew = () => {
         onSubmit={handleSubmit(handleAddNewCategory)}
         autoComplete="off"
       >
-        <div className="form-layout">
+        <div className="mb-5">
           <Field>
             <Label>Name</Label>
             <Input

@@ -1,11 +1,8 @@
-import { Button } from "components/button";
-import { Field } from "components/field";
-import ImageUpload from "components/image/ImageUpload";
-import { Input } from "components/input";
-import { Label } from "components/label";
-import DashboardHeading from "module/dashboard/DashboardHeading";
 import React from "react";
 import { useForm } from "react-hook-form";
+
+import { Button, Field, Input, Label, ImageUpload } from "../../index";
+import { DashboardHeading } from "../dashboard";
 
 const UserProfile = () => {
   const { control } = useForm({
@@ -19,7 +16,7 @@ const UserProfile = () => {
       ></DashboardHeading>
       <form>
         <div className="text-center mb-10">
-          <ImageUpload className="w-[200px] h-[200px] !rounded-full min-h-0 mx-auto"></ImageUpload>
+          <ImageUpload className="!w-[200px] h-[200px] !rounded-full min-h-0 mx-auto"></ImageUpload>
         </div>
         <div className="form-layout">
           <Field>

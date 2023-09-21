@@ -139,7 +139,7 @@ const CategoryManage = () => {
           <tbody>
             {categoryList?.length > 0 && categoryList.map(category =>
             (<tr key={category.id}>
-              <td>{category.id}</td>
+              <td title={category.id}>{category.id.slice(0, 6) + "..."}</td>
               <td>{category.name}</td>
               <td>
                 <span className="italic text-gray-500 cursor-pointer">{category.slug}</span>

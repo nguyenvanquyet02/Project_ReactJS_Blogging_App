@@ -13,6 +13,7 @@ export { default as Pagination } from './base/pagination/Pagination';
 export { default as Table } from './base/table/Table';
 export { default as Toggle } from './base/toggle/Toggle';
 export { default as ImageUpload } from './base/image/ImageUpload';
+export { default as Textarea } from './base/textarea/Textarea';
 
 
 export { default as Layout } from './layouts/Layout';

@@ -4,8 +4,12 @@ import styled from "styled-components";
 const DashboardHeaderStyles = styled.div`
   background-color: white;
   padding: 20px 40px;
+  z-index: 1;
   border-bottom: 1px solid #eee;
   display: flex;
+  position: sticky;
+  top: 0;
+  right: 0;
   align-items: center;
   justify-content: space-between;
   .header-avatar {
@@ -41,10 +45,12 @@ const DashboardHeader = () => {
       <div className="flex items-center gap-6">
 
         <div className="header-avatar">
-          <img
-            src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80"
-            alt=""
-          />
+          <Link to="/profile">
+            <img
+              src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80"
+              alt=""
+            />
+          </Link>
         </div>
       </div>
     </DashboardHeaderStyles>
