@@ -3,10 +3,13 @@ import { useState } from 'react';
 import { LabelStatus, Table } from '../../index';
 import { useEffect } from 'react';
 import { ActionEdit, ActionDelete } from '../../action'
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../../firebase/firebase-config';
 import { useNavigate } from 'react-router-dom';
 import { userRole, userStatus } from '../../../utils/constants';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
+import { deleteUser } from 'firebase/auth';
 const UserTable = () => {
   const [userList, setUserList] = useState([]);
   const navigate = useNavigate();
@@ -26,7 +29,36 @@ const UserTable = () => {
     }
     getDataUsers();
   }, []);
-  const handleDeleteUser = () => { }
+
+  //this func is used for deleting user using sweetalert2 and deleteDoc
+  const handleDeleteUser = async (user) => {
+    try {
+      const colRef = doc(db, "users", user.id);
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await deleteDoc(colRef);
+          await deleteUser(user);
+          Swal.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          )
+          toast.success("Delete user successfully!!!")
+        }
+      })
+    } catch (error) {
+      console.log(error);
+      toast.error("Delete user failed!!!");
+    }
+  }
   const renderRoleLabel = (role) => {
     switch (role) {
       case userRole.ADMIN:
@@ -54,7 +86,6 @@ const UserTable = () => {
   }
   const rederUserItem = (user) => {
     if (!user) return null;
-    console.log(user);
     return (
       <tr key={user.id}>
         <td title={user.id}>{user.id.slice(0, 6) + "..."}</td>
@@ -67,7 +98,7 @@ const UserTable = () => {
             <spdivan className='flex-1'>
               <h3 className='font-semibold'>{user.fullname}</h3>
               <time className='text-xs text-gray-400'>
-                {new Date(user.createdAt.seconds * 1000).toLocaleDateString("vi-VI")}
+                {new Date(user?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
               </time>
             </spdivan>
           </div>
@@ -79,7 +110,7 @@ const UserTable = () => {
         <td>
           <div className="flex items-center gap-x-3">
             <ActionEdit onClick={() => navigate(`/manage/update-user?id=${user.id}`)}></ActionEdit>
-            <ActionDelete onClick={() => handleDeleteUser(user.id)}></ActionDelete>
+            <ActionDelete onClick={() => handleDeleteUser(user)}></ActionDelete>
           </div>
         </td>
       </tr>)

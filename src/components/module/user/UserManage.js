@@ -1,6 +1,6 @@
 import { Button } from "../../index";
 import { DashboardHeading } from "../dashboard";
-import React, { useState } from "react";
+import React from "react";
 // import { useAuth } from "contexts/auth-context";
 // import { userRole } from "utils/constants";
 import UserTable from "./UserTable";
@@ -11,12 +11,12 @@ const UserManage = () => {
   // if (userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
-      <DashboardHeading
-        title="Users"
-        desc="Manage your user"
-      ></DashboardHeading>
-      <div className="flex justify-end mb-10">
-        <Button kind="ghost" to="/manage/add-user">
+      <div className="flex justify-between mb-10">
+        <DashboardHeading
+          title="Users"
+          desc="Manage your user"
+        ></DashboardHeading>
+        <Button kind="primary" to="/manage/add-user">
           Add new user
         </Button>
       </div>

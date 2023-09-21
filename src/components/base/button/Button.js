@@ -26,8 +26,7 @@ const ButtonStyles = styled.button`
             ${props => props.theme.primary},
             ${props => props.theme.secondary}
         );
-    `};
-    
+    `};    
     &:disabled{
         opacity: 0.5;
         pointer-events:none;

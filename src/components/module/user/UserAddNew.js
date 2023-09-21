@@ -6,8 +6,8 @@ import { auth, db } from "../../../firebase/firebase-config";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import slugify from "slugify";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
-import { useAuth } from "../../../contexts/auth-context";
+// import Swal from "sweetalert2";
+// import { useAuth } from "../../../contexts/auth-context";
 
 import { Button, Radio, Field, FieldCheckboxes, Input, Label, ImageUpload } from "../../index";
 import { DashboardHeading } from "../dashboard";

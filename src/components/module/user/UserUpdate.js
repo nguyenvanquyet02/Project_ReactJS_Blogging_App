@@ -9,7 +9,6 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 import { userRole, userStatus } from "../../../utils/constants";
 
 const UserUpdate = () => {
@@ -24,54 +23,51 @@ const UserUpdate = () => {
   } = useForm({
     mode: "onChange",
   });
-  const [params] = useSearchParams();
-  const userId = params.get("id");
+
   const watchStatus = watch("status");
   const watchRole = watch("role");
+  const [params] = useSearchParams();
+  const userId = params.get("id");
+  //get name image
+  const deleteAvatar = async () => {
+    const colRef = doc(db, "users", userId);
+    await updateDoc(colRef, {
+      avatar: ""
+    })
+  }
   const imageUrl = getValues("avatar");
-  const imageRegex = /%2F(\S+)\?/gm.exec(imageUrl);
+  const imageRegex = (/%2F(\S+)\?/gm).exec(imageUrl);
   const imageName = imageRegex?.length > 0 ? imageRegex[1] : "";
-  const { image, setImage, progress, handleSelectImage, handleDeleteImage } =
-    useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
-  const { userInfo } = useAuth();
+  const { image, setImage, progress, handleSelectImage, handleDeleteImage } = useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
+
+  useEffect(() => {
+    setImage(imageUrl);
+  }, [imageUrl, setImage])
+  //get data user
+  useEffect(() => {
+    async function getDataUser() {
+      if (!userId) return;
+      const colRef = doc(db, "users", userId);
+      const userData = await getDoc(colRef);
+      reset(userData && userData.data());
+    };
+    getDataUser();
+  }, [userId, reset]);
+  //this func is used for updating user
   const handleUpdateUser = async (values) => {
     if (!isValid) return;
-    if (userInfo?.role !== userRole.ADMIN) {
-      Swal.fire("Failed", "You have no right to do this action", "warning");
-      return;
-    }
     try {
       const colRef = doc(db, "users", userId);
       await updateDoc(colRef, {
         ...values,
-        avatar: image,
+        avatar: image
       });
-      toast.success("Update user information successfully!");
+      toast.success("Update user successfully!!!");
     } catch (error) {
       console.log(error);
-      toast.error("Update user failed!");
+      toast.error("Update user failed!!!");
     }
-  };
-
-  async function deleteAvatar() {
-    const colRef = doc(db, "users", userId);
-    await updateDoc(colRef, {
-      avatar: "",
-    });
   }
-  useEffect(() => {
-    setImage(imageUrl);
-  }, [imageUrl, setImage]);
-  useEffect(() => {
-    async function fetchData() {
-      if (!userId) return;
-      const colRef = doc(db, "users", userId);
-      const docData = await getDoc(colRef);
-      reset(docData && docData.data());
-    }
-    fetchData();
-  }, [userId, reset]);
-
   if (!userId) return null;
   return (
     <div>
@@ -123,7 +119,6 @@ const UserUpdate = () => {
               name="password"
               placeholder="Enter your password"
               control={control}
-              type="password"
             ></Input>
           </Field>
         </div>
