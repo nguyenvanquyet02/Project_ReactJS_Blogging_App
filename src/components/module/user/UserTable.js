@@ -48,7 +48,7 @@ const UserTable = () => {
           await deleteUser(user);
           Swal.fire(
             'Deleted!',
-            'Your file has been deleted.',
+            'Your user has been deleted.',
             'success'
           )
           toast.success("Delete user successfully!!!")
@@ -84,56 +84,56 @@ const UserTable = () => {
         break;
     }
   }
-  const rederUserItem = (user) => {
-    if (!user) return null;
-    return (
-      <tr key={user.id}>
-        <td title={user.id}>{user.id.slice(0, 6) + "..."}</td>
-        <td>
-          <div className='flex items-center gap-x-3'>
-            <img
-              src={user.avatar} alt={user.fullname}
-              className='flex-shrink-0 object-cover w-10 h-10 rounded-md'
-            />
-            <spdivan className='flex-1'>
-              <h3 className='font-semibold'>{user.fullname}</h3>
-              <time className='text-xs text-gray-400'>
-                {new Date(user?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
-              </time>
-            </spdivan>
-          </div>
-        </td>
-        <td>{user.username}</td>
-        <td>{user.email.split("@")[0] + "@..."}</td>
-        <td>{renderLabelStatus(+user.status)}</td>
-        <td>{renderRoleLabel(+user.role)}</td>
-        <td>
-          <div className="flex items-center gap-x-3">
-            <ActionEdit onClick={() => navigate(`/manage/update-user?id=${user.id}`)}></ActionEdit>
-            <ActionDelete onClick={() => handleDeleteUser(user)}></ActionDelete>
-          </div>
-        </td>
-      </tr>)
-  }
+  // const rederUserItem = (user) => {
+  //   if (!user) return null;
+  //   return (
+  //     )
+  // }
   return (
-    <div>
-      <Table>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Infor</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Role</th>
-            <th>Actions</th>
+    <Table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Infor</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {userList?.length > 0 && userList.map(user => (
+          <tr key={user.id}>
+            <td title={user.id}>{user.id.slice(0, 6) + "..."}</td>
+            <td>
+              <div className='flex items-center gap-x-3'>
+                <img
+                  src={user.avatar} alt={user.fullname}
+                  className='flex-shrink-0 object-cover w-10 h-10 rounded-md'
+                />
+                <spdivan className='flex-1'>
+                  <h3 className='font-semibold'>{user.fullname}</h3>
+                  <time className='text-xs text-gray-400'>
+                    {new Date(user?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
+                  </time>
+                </spdivan>
+              </div>
+            </td>
+            <td>{user.username}</td>
+            <td>{user.email.split("@")[0] + "@..."}</td>
+            <td>{renderLabelStatus(+user.status)}</td>
+            <td>{renderRoleLabel(+user.role)}</td>
+            <td>
+              <div className="flex items-center gap-x-3">
+                <ActionEdit onClick={() => navigate(`/manage/update-user?id=${user.id}`)}></ActionEdit>
+                <ActionDelete onClick={() => handleDeleteUser(user)}></ActionDelete>
+              </div>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {userList?.length > 0 && userList.map(user => rederUserItem(user))}
-        </tbody>
-      </Table>
-    </div>
+        ))}
+      </tbody>
+    </Table>
   );
 };
 

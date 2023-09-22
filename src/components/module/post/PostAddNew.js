@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from 'slugify'
 import { postStatus } from "../../../utils/constants";
-import { addDoc, collection, getDocs, query, serverTimestamp, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, where } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
 import { useFirebaseImage } from "../../../hooks";
 import { useAuth } from "../../../contexts/auth-context";
@@ -19,9 +19,10 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      categoryId: "",
+      category: {},
       hot: false,
-      image: ""
+      image: "",
+      user: {}
     },
   });
   const { userInfo } = useAuth();
@@ -30,6 +31,23 @@ const PostAddNew = () => {
   const watchStatus = watch("status");
   const watchHot = watch("hot");
 
+  // get data user add post
+  useEffect(() => {
+    if (!userInfo.email) return;
+    async function getDataUser() {
+      const q = query(collection(db, "users"), where("email", "==", userInfo.email))
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(doc => {
+        setValue("user", {
+          id: doc.id,
+          ...doc.data()
+        })
+      })
+
+    }
+    getDataUser()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo?.email]);
   //custom hook is used for handling firebase image
   const {
     image,
@@ -63,11 +81,11 @@ const PostAddNew = () => {
     try {
       values.slug = slugify(values.title || values.slug, { lower: true });
       values.status = +values.status;
+      console.log(values);
       const colRef = collection(db, "posts");
       await addDoc(colRef, {
         ...values,
         image,
-        userId: userInfo.uid,
         createdAt: serverTimestamp(),
       })
       toast.success("Create new post successfully!!!");
@@ -75,9 +93,10 @@ const PostAddNew = () => {
         title: "",
         slug: "",
         status: postStatus.PENDING,
-        categoryId: "",
+        category: {},
         hot: false,
-        image: ""
+        image: "",
+        user: {}
       });
       // reset image
       handleResetImage();
@@ -87,10 +106,18 @@ const PostAddNew = () => {
     }
   }
   //this func is used for selecting item for dropdown
-  const handleClickOptionDropdown = (item) => {
-    setValue("categoryId", item.id);
+  const handleClickOptionDropdown = async (item) => {
+    // get data category of post
+    const colRef = doc(db, "categories", item.id);
+    const docData = await getDoc(colRef);
+    setValue("category", {
+      id: docData.id,
+      ...docData.data()
+    })
+    // set de hien thi giao dien
     setSelectCategoty(item)
   }
+  // console.log(categoryDetail)
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Add new post</h1>

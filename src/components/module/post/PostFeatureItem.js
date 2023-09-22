@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImg from "./PostImg";
-import { useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../firebase/firebase-config";
 import slugify from "slugify";
 const PostFeatureItemStyles = styled.div`
   width: 100%;
@@ -53,32 +50,11 @@ const PostFeatureItemStyles = styled.div`
   }
 `;
 const PostFeatureItem = ({ data }) => {
-  const [category, setCategory] = useState({});
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    async function getCategory() {
-      const docRef = doc(db, "categories", data.categoryId);
-      const docSnap = await getDoc(docRef);
-      setCategory(docSnap.data());
-    }
-
-    getCategory();
-
-  }, [data.categoryId]);
-  useEffect(() => {
-    async function getAuthor() {
-      if (data.userId) {
-        const docRef = doc(db, "users", data.userId)
-        const docSnap = await getDoc(docRef);
-        if (docSnap.data()) setUser(docSnap.data());
-      }
-    }
-    getAuthor();
-  }, [data.userId]);
   if (!data) return null;
   //get date of post
   const date = data?.createdAt?.seconds ? new Date(data?.createdAt?.seconds * 1000) : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  const { category, user } = data;
   return (
     <PostFeatureItemStyles>
       <PostImg url={data.image}></PostImg>

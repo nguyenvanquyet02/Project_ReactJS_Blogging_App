@@ -39,7 +39,7 @@ const UserUpdate = () => {
   const imageRegex = (/%2F(\S+)\?/gm).exec(imageUrl);
   const imageName = imageRegex?.length > 0 ? imageRegex[1] : "";
   const { image, setImage, progress, handleSelectImage, handleDeleteImage } = useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
-
+  //reset image 
   useEffect(() => {
     setImage(imageUrl);
   }, [imageUrl, setImage])

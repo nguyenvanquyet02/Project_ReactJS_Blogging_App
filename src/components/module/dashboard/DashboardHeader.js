@@ -4,7 +4,7 @@ import styled from "styled-components";
 const DashboardHeaderStyles = styled.div`
   background-color: white;
   padding: 20px 40px;
-  z-index: 1;
+  z-index: 100;
   border-bottom: 1px solid #eee;
   display: flex;
   position: sticky;

@@ -1,7 +1,7 @@
 import { deleteObject, getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { useState } from "react";
 
-export default function useFirebaseImage(setValue, getValue, imageName = null, cb) {
+export default function useFirebaseImage(setValue, getValue, imageName = null, cb = null) {
     const [image, setImage] = useState("");
     const [progress, setProgress] = useState(0);
     const storage = getStorage();

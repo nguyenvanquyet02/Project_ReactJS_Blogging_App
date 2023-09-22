@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./contexts/auth-context";
 import { DashboardLayout } from "./components/module/dashboard";
-import { PostManage, PostAddNew } from "./components/module/post";
+import { PostManage, PostAddNew, PostUpdate } from "./components/module/post";
 import { CategoryAddNew, CategoryManage, CategoryUpdate } from "./components/module/category";
 import { SignUpPage, SignInPage, HomePage, NotFoundPage, DashboardPage, PostDetailsPage, } from "./pages";
 import { UserAddNew, UserManage, UserProfile, UserUpdate } from "./components/module/user";
@@ -44,11 +44,10 @@ function App() {
               path="/manage/update-category"
               element={<CategoryUpdate></CategoryUpdate>}
             ></Route>
-            {/*
             <Route
               path="/manage/update-post"
               element={<PostUpdate></PostUpdate>}
-            ></Route> */}
+            ></Route>
             <Route
               path="/manage/user"
               element={<UserManage></UserManage>}
