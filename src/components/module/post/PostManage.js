@@ -178,7 +178,7 @@ const PostManage = () => {
                 <span className="text-gray-500">{post.user.fullname}</span>
               </td>
               <td>
-                {handleRenderPostStatus(post.status)}
+                {handleRenderPostStatus(+post.status)}
               </td>
               <td>
                 <div className="flex items-center gap-x-3 text-gray-500">

@@ -50,8 +50,10 @@
     }
   }
   img {
+    width: 80%;
     border-radius: 8px;
-    margin-bottom: 30px;
+    margin: 20px auto;
+    // margin-bottom: 30px;
   }
   @media screen and (max-width: 1023.98px) {
     font-size: 14px;

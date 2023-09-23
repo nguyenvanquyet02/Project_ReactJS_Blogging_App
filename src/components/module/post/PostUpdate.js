@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { Button, Field, ImageUpload, Input, Label, Radio, Toggle } from "../../index";
@@ -9,13 +9,23 @@ import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "fireb
 import { db } from "../../../firebase/firebase-config";
 import { useFirebaseImage } from "../../../hooks";
 // using react quill to update content field
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import ImageUploader from "quill-image-uploader";
+import axios from "axios";
+import { imgbbAPI } from "../../../config/apiConfig";
+
+Quill.register("modules/imageUploader", ImageUploader);
+
 const PostUpdate = () => {
   // get param id of post
   const [params] = useSearchParams();
   const postId = params.get("id");
 
+
+  const [selectCategory, setSelectCategoty] = useState({});
+  const [categories, setCategoties] = useState([]);
+  const [content, setContent] = useState("");
   //field of react-hook-form
   const {
     control,
@@ -37,9 +47,6 @@ const PostUpdate = () => {
     // handleResetImage,
     handleSelectImage,
     handleDeleteImage } = useFirebaseImage(setValue, getValues)
-  const [selectCategory, setSelectCategoty] = useState({});
-  const [categories, setCategoties] = useState([]);
-  const [content, setContent] = useState("");
   // get data of post with post id
   useEffect(() => {
     async function getDataPost() {
@@ -48,12 +55,17 @@ const PostUpdate = () => {
       if (docSnapshot.data()) {
         reset(docSnapshot.data());
         setSelectCategoty(docSnapshot.data()?.category || "");
-        setImage(docSnapshot.data()?.image)
+        setContent(docSnapshot.data().content);
       }
     }
     getDataPost();
   }, [postId, reset]);
 
+  // set image cu trong update
+  const imageUrl = getValues("image");
+  useEffect(() => {
+    setImage(imageUrl);
+  }, [imageUrl, setImage]);
   // get data of category
   useEffect(() => {
     async function getDataCategories() {
@@ -77,10 +89,10 @@ const PostUpdate = () => {
     try {
       const docRef = doc(db, "posts", postId);
       await updateDoc(docRef, {
+        ...values,
         content,
       })
-
-
+      console.log(values);
       toast.success("Update post successfully!!!");
     } catch (error) {
       toast.error("Update post failed!!!")
@@ -99,7 +111,36 @@ const PostUpdate = () => {
     // set de hien thi giao dien
     setSelectCategoty(item);
   }
-  console.log(categories);
+  // input content upload image
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote"],
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["link", "image"],
+      ],
+      imageUploader: {
+        // imgbbAPI
+        upload: async (file) => {
+          console.log("upload: ~ file", file);
+          const bodyFormData = new FormData();
+          console.log("upload: ~ bodyFormData", bodyFormData);
+          bodyFormData.append("image", file);
+          const response = await axios({
+            method: "post",
+            url: imgbbAPI,
+            data: bodyFormData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          return response.data.data.url;
+        },
+      },
+    }), []);
   if (!postId) return null;
   return (
     <div>
@@ -199,7 +240,11 @@ const PostUpdate = () => {
           <Field>
             <Label>Content</Label>
             <div className="w-full entry-content">
-              <ReactQuill theme="snow" value={content} onChange={setContent} />
+              <ReactQuill
+                modules={modules}
+                theme="snow"
+                value={content}
+                onChange={setContent} />
             </div>
           </Field>
         </div>

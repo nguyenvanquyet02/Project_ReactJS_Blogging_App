@@ -27,7 +27,7 @@ const PostDetailsPageStyles = styled.div`
     &-heading {
       font-weight: bold;
       font-size: 36px;
-      margin-bottom: 16px;
+      margin-bottom: 32px;
     }
     &-info {
       flex: 1;
@@ -38,8 +38,7 @@ const PostDetailsPageStyles = styled.div`
     }
   }
   .author {
-    margin-top: 40px;
-    margin-bottom: 80px;
+    padding: 4px;
     display: flex;
     border-radius: 20px;
     background-color: ${(props) => props.theme.grayF3};
@@ -111,7 +110,7 @@ const PostDetailsPage = () => {
     getDataPost();
   }, [slug]);
 
-  if (!slug) return <NotFoundPage />
+  if (!slug || !postInfo.title) return <NotFoundPage />
   if (!postInfo.title) return null;
   const { user } = postInfo;
   return (
@@ -128,7 +127,10 @@ const PostDetailsPage = () => {
               <h1 className="post-heading">
                 {postInfo.title}
               </h1>
-              <PostMeta></PostMeta>
+              <PostMeta
+                date={new Date(postInfo?.createdAt?.seconds * 1000).toLocaleDateString("vi-VI")}
+                authorName={postInfo?.user?.fullname}
+              />
             </div>
           </div>
           <div className="post-content">
