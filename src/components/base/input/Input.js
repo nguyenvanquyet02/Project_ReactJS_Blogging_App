@@ -47,10 +47,9 @@ const InputStyles = styled.div`
 /**
  * Created by Celine Maris
  * @param {*} control control of react hook form
- * @param {string} type type of input
- * @requires
- * @param {string} name name of input 
- * @returns 
+ * @param {*} type type of input
+ * @param {*} name name of input 
+ * @returns Input
  */
 const Input = ({ name = "", type = "text", children,
   control, ...props }) => {
@@ -69,7 +68,7 @@ const Input = ({ name = "", type = "text", children,
 Input.prototype = {
   name: PropTypes.string.isRequired,
   type: PropTypes.string,
-  children: PropTypes.node,
-  control: PropTypes.object.isRequired
+  children: PropTypes.any,
+  control: PropTypes.any.isRequired
 }
 export default Input;

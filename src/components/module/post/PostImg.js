@@ -7,6 +7,7 @@ const PostImgStyles = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: inherit;
+      border: 1px solid #eee;
     }
     a{
         display: "block";

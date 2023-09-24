@@ -14,6 +14,7 @@ import 'react-quill/dist/quill.snow.css';
 import ImageUploader from "quill-image-uploader";
 import axios from "axios";
 import { imgbbAPI } from "../../../config/apiConfig";
+import slugify from "slugify";
 
 Quill.register("modules/imageUploader", ImageUploader);
 
@@ -96,6 +97,7 @@ const PostUpdate = () => {
   const handleUpdatePost = async (values) => {
     if (!isValid) return;
     values.status = +values.status;
+    values.slug = slugify(values.slug || values.title, { lower: true });
     try {
       const docRef = doc(db, "posts", postId);
       await updateDoc(docRef, {

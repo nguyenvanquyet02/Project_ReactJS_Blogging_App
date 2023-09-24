@@ -79,7 +79,7 @@ const PostAddNew = () => {
   const addPostHandler = async (values) => {
     if (!isValid) return;
     try {
-      values.slug = slugify(values.title || values.slug, { lower: true });
+      values.slug = slugify(values.slug || values.title, { lower: true });
       values.status = +values.status;
       console.log(values);
       const colRef = collection(db, "posts");

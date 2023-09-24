@@ -21,11 +21,11 @@ const HomeFeature = () => {
         result.push({
           id: doc.id,
           ...doc.data()
-        })
-      })
+        });
+      });
       setPosts(result);
-    })
-  }, [])
+    });
+  }, []);
   if (posts.length <= 0) return null;
   return (
     <HomeFeatureStyles className="home-block">
