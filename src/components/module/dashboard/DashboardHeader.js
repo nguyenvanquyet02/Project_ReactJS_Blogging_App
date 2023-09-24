@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../../../contexts/auth-context";
 const DashboardHeaderStyles = styled.div`
   background-color: white;
   padding: 20px 40px;
@@ -20,6 +21,7 @@ const DashboardHeaderStyles = styled.div`
       height: 100%;
       object-fit: cover;
       border-radius: 100rem;
+      border: 1px solid #eee;
     }
   }
   .sidebar-logo {
@@ -34,6 +36,7 @@ const DashboardHeaderStyles = styled.div`
 `;
 
 const DashboardHeader = () => {
+  const { userInfo } = useAuth();
   return (
     <DashboardHeaderStyles>
       <Link to="/">
@@ -47,8 +50,8 @@ const DashboardHeader = () => {
         <div className="header-avatar">
           <Link to="/profile">
             <img
-              src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80"
-              alt=""
+              src={userInfo?.avatar}
+              alt={userInfo?.username}
             />
           </Link>
         </div>

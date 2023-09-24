@@ -23,7 +23,6 @@ const CategoryUpdate = () => {
   const categoryId = params.get("id");
   const watchStatus = watch("status");
   const navigate = useNavigate();
-
   // get data category
   useEffect(() => {
     async function getDataCategory() {
@@ -53,6 +52,7 @@ const CategoryUpdate = () => {
       console.log(error);
     }
   }
+
   return (
     <div>
       <DashboardHeading title="Update category" desc={`Update your category id: ${categoryId}`}></DashboardHeading>

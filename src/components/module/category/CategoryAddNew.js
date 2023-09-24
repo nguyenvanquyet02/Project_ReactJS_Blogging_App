@@ -1,5 +1,5 @@
 import slugify from "slugify";
-import { categoryStatus } from "../../../utils/constants";
+import { categoryStatus, userRole } from "../../../utils/constants";
 import { Button, Radio, Field, Input, Label, FieldCheckboxes } from "../../index";
 import { DashboardHeading } from "../dashboard";
 import React from "react";
@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../contexts/auth-context";
 
 const CategoryAddNew = () => {
   const {
@@ -49,6 +50,9 @@ const CategoryAddNew = () => {
     } finally {
     }
   }
+  // phan quyen chi admin moi ca the truy cap
+  const { userInfo } = useAuth();
+  if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <DashboardHeading

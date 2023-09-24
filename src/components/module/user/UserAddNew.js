@@ -6,12 +6,11 @@ import { auth, db } from "../../../firebase/firebase-config";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import slugify from "slugify";
 import { toast } from "react-toastify";
-// import Swal from "sweetalert2";
-// import { useAuth } from "../../../contexts/auth-context";
 
 import { Button, Radio, Field, FieldCheckboxes, Input, Label, ImageUpload } from "../../index";
 import { DashboardHeading } from "../dashboard";
 import { useFirebaseImage } from "../../../hooks";
+import { useAuth } from "../../../contexts/auth-context";
 
 const UserAddNew = () => {
   const {
@@ -81,6 +80,9 @@ const UserAddNew = () => {
       console.log(error);
     }
   };
+  // phan quyen chi admin moi ca the truy cap
+  const { userInfo } = useAuth();
+  if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <DashboardHeading

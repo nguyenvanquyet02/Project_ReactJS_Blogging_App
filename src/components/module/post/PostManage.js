@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { postStatus } from "../../../utils/constants";
+import { postStatus, userRole } from "../../../utils/constants";
+import { useAuth } from "../../../contexts/auth-context";
 
-const POST_PER_PAGE = 1;
+const POST_PER_PAGE = 3;
 const PostManage = () => {
   const [postList, setPostList] = useState([]);
   const [filter, setFilter] = useState("");
@@ -119,7 +120,9 @@ const PostManage = () => {
     // set lai last doc truoc do
     setLastDoc(lastVisible);
   }
-  console.log(postList);
+  // phan quyen chi admin moi ca the truy cap
+  const { userInfo } = useAuth();
+  if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <div className="flex justify-between">

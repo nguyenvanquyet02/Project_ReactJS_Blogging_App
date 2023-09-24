@@ -15,7 +15,7 @@ const PostImgStyles = styled.div`
 `;
 const PostImg = ({ url = '', to = "", alt = 'imageAlt', className = '' }) => {
     if (to) return (
-        <Link to={`${to}`} style={{}}>
+        <Link to={`/${to}`} style={{}}>
             <PostImgStyles className={`post-image ${className}`}>
                 <img
                     src={url}

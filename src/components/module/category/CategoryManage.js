@@ -4,11 +4,12 @@ import { Button, LabelStatus, Table } from "../../index";
 import { DashboardHeading } from "../dashboard";
 import React, { useEffect, useState } from "react";
 import { db } from "../../../firebase/firebase-config";
-import { categoryStatus } from "../../../utils/constants";
+import { categoryStatus, userRole } from "../../../utils/constants";
 import { toast } from "react-toastify";
 import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
+import { useAuth } from "../../../contexts/auth-context";
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
@@ -108,6 +109,9 @@ const CategoryManage = () => {
     // set lai last doc truoc do
     setLastDoc(lastVisible);
   }
+  // phan quyen chi admin moi ca the truy cap
+  const { userInfo } = useAuth();
+  if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <>
       <div className="flex justify-between">

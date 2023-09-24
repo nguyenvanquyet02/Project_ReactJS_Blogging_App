@@ -1,14 +1,14 @@
 import { Button } from "../../index";
 import { DashboardHeading } from "../dashboard";
 import React from "react";
-// import { useAuth } from "contexts/auth-context";
-// import { userRole } from "utils/constants";
 import UserTable from "./UserTable";
+import { useAuth } from "../../../contexts/auth-context";
+import { userRole } from "../../../utils/constants";
 
 const UserManage = () => {
-
-  // const { userInfo } = useAuth();
-  // if (userInfo.role !== userRole.ADMIN) return null;
+  // phan quyen chi admin moi ca the truy cap
+  const { userInfo } = useAuth();
+  if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <div className="flex justify-between mb-10">

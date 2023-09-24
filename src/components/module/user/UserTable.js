@@ -10,6 +10,7 @@ import { userRole, userStatus } from '../../../utils/constants';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import { deleteUser } from 'firebase/auth';
+import { useAuth } from '../../../contexts/auth-context';
 const UserTable = () => {
   const [userList, setUserList] = useState([]);
   const navigate = useNavigate();
@@ -84,12 +85,14 @@ const UserTable = () => {
         break;
     }
   }
-  console.log(userList);
   // const rederUserItem = (user) => {
   //   if (!user) return null;
   //   return (
   //     )
   // }
+  // phan quyen chi admin moi ca the truy cap
+  const { userInfo } = useAuth();
+  if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <Table>
       <thead>

@@ -1,8 +1,6 @@
 import { Button, Radio, Field, FieldCheckboxes, Input, Label, ImageUpload, Textarea } from "../../index";
 import { DashboardHeading } from "../dashboard";
 import { useFirebaseImage } from "../../../hooks";
-
-// import { useAuth } from "../../../contexts/auth-context";
 import { db } from "../../../firebase/firebase-config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect } from "react";

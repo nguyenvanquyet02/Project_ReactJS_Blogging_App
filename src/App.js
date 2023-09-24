@@ -3,7 +3,7 @@ import { AuthProvider } from "./contexts/auth-context";
 import { DashboardLayout } from "./components/module/dashboard";
 import { PostManage, PostAddNew, PostUpdate } from "./components/module/post";
 import { CategoryAddNew, CategoryManage, CategoryUpdate } from "./components/module/category";
-import { SignUpPage, SignInPage, HomePage, NotFoundPage, DashboardPage, PostDetailsPage, } from "./pages";
+import { SignUpPage, SignInPage, HomePage, NotFoundPage, DashboardPage, PostDetailsPage, CategoryPage, AuthorPage, } from "./pages";
 import { UserAddNew, UserManage, UserProfile, UserUpdate } from "./components/module/user";
 
 function App() {
@@ -16,9 +16,18 @@ function App() {
           <Route path="/sign-in" element={<SignInPage></SignInPage>}></Route>
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
           <Route
+            path="/category/:slug"
+            element={<CategoryPage></CategoryPage>}
+          ></Route>
+          <Route
+            path="/author/:slug"
+            element={<AuthorPage></AuthorPage>}
+          ></Route>
+          <Route
             path="/:slug"
             element={<PostDetailsPage></PostDetailsPage>}
           ></Route>
+
           <Route element={<DashboardLayout></DashboardLayout>}>
             <Route
               path="/dashboard"
