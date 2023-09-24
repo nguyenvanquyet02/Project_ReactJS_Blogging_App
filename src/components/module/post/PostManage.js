@@ -119,6 +119,7 @@ const PostManage = () => {
     // set lai last doc truoc do
     setLastDoc(lastVisible);
   }
+  console.log(postList);
   return (
     <div>
       <div className="flex justify-between">

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { collection, limit, onSnapshot, query, where } from 'firebase/firestore'
 import { db } from "../../../firebase/firebase-config";
+import { postStatus } from "../../../utils/constants";
 const HomeFeatureStyles = styled.div``;
 
 const HomeFeature = () => {
@@ -11,7 +12,7 @@ const HomeFeature = () => {
   useEffect(() => {
     const colRef = collection(db, "posts");
     const qy = query(colRef,
-      where("status", "==", 1),
+      where("status", "==", +postStatus.APPROVED),
       where("hot", "==", true),
       limit(3));
     onSnapshot(qy, (snapshot) => {

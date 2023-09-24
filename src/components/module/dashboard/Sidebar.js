@@ -27,6 +27,8 @@ const SidebarStyles = styled.div`
     }
   }
 `;
+
+
 const sidebarLinks = [
   {
     title: "Dashboard",
@@ -127,10 +129,13 @@ const sidebarLinks = [
         />
       </svg>
     ),
-    onClick: () => signOut(auth),
+    onClick: () => {
+      signOut(auth)
+    },
   },
 ];
 const Sidebar = () => {
+
   return (
     <SidebarStyles className="sidebar">
 

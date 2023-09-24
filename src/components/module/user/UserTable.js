@@ -84,6 +84,7 @@ const UserTable = () => {
         break;
     }
   }
+  console.log(userList);
   // const rederUserItem = (user) => {
   //   if (!user) return null;
   //   return (

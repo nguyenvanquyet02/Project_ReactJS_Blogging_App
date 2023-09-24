@@ -41,12 +41,7 @@ const PostUpdate = () => {
   //watch hot and status of post
   const watchHot = watch("hot");
   const watchStatus = watch("status");
-  const { image,
-    progress,
-    setImage,
-    // handleResetImage,
-    handleSelectImage,
-    handleDeleteImage } = useFirebaseImage(setValue, getValues)
+
   // get data of post with post id
   useEffect(() => {
     async function getDataPost() {
@@ -60,12 +55,26 @@ const PostUpdate = () => {
     }
     getDataPost();
   }, [postId, reset]);
-
   // set image cu trong update
+  const imageName = getValues("image_name");
   const imageUrl = getValues("image");
+  //get name image
+  const deleteImage = async () => {
+    const colRef = doc(db, "posts", postId);
+    await updateDoc(colRef, {
+      image: ""
+    })
+  }
+  const { image,
+    progress,
+    setImage,
+    // handleResetImage,
+    handleSelectImage,
+    handleDeleteImage } = useFirebaseImage(setValue, getValues, imageName, deleteImage)
   useEffect(() => {
     setImage(imageUrl);
   }, [imageUrl, setImage]);
+
   // get data of category
   useEffect(() => {
     async function getDataCategories() {
@@ -86,13 +95,13 @@ const PostUpdate = () => {
   // this func is used for updating post
   const handleUpdatePost = async (values) => {
     if (!isValid) return;
+    values.status = +values.status;
     try {
       const docRef = doc(db, "posts", postId);
       await updateDoc(docRef, {
         ...values,
         content,
       })
-      console.log(values);
       toast.success("Update post successfully!!!");
     } catch (error) {
       toast.error("Update post failed!!!")

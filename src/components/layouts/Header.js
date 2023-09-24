@@ -5,7 +5,15 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth-context';
 
 const HeaderStyles = styled.div`
-padding: 18px 0px;
+    padding: 18px 0px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    width: 100%;
+    z-index: 100;
+    border-bottom: 1px solid #eee;
+    
 //logo container
     .logo-container{
         display: flex;
@@ -88,12 +96,10 @@ const menuLinks = [
 ]
 const getLastName = (name) => {
     if (!name) return "";
-    const length = name.split(" ").length
-    return name.split(" ")[length - 1]
+    return name.charAt(0).toUpperCase() + name.slice(1)
 }
 const Header = () => {
     const { userInfo } = useAuth();
-    // console.log(userInfo);
     return (
         <HeaderStyles>
             <div className='container'>
@@ -155,7 +161,7 @@ const Header = () => {
                             style={{ width: "140px", height: "44px" }}>Dashboard</Button>
                         {!userInfo ? <Button to="/sign-in" style={{ width: "120px", height: "44px" }} kind='primary'>Login</Button>
                             : <div className='header-auth'>
-                                {getLastName(userInfo?.displayName)}
+                                {getLastName(userInfo?.email?.split("@")[0])}
                             </div>}
                     </div>
                 </div>
