@@ -102,6 +102,7 @@ const PostUpdate = () => {
       const docRef = doc(db, "posts", postId);
       await updateDoc(docRef, {
         ...values,
+        image,
         content,
       })
       toast.success("Update post successfully!!!");
