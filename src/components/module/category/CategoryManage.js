@@ -112,6 +112,7 @@ const CategoryManage = () => {
   // phan quyen chi admin moi ca the truy cap
   const { userInfo } = useAuth();
   if (+userInfo.role !== userRole.ADMIN) return null;
+  // console.log(categoryList);
   return (
     <>
       <div className="flex justify-between">
@@ -158,9 +159,9 @@ const CategoryManage = () => {
               </td>
               <td>
                 <div className="flex items-center gap-x-3">
-                  <ActionView></ActionView>
-                  <ActionEdit onClick={() => navigate(`/manage/update-category?id=${category.id}`)}></ActionEdit>
-                  <ActionDelete onClick={() => handleDeleteCategory(category.id)}></ActionDelete>
+                  <ActionView onClick={() => navigate(`/category/${category.slug}`)} />
+                  <ActionEdit onClick={() => navigate(`/manage/update-category?id=${category.id}`)} />
+                  <ActionDelete onClick={() => handleDeleteCategory(category.id)} />
                 </div>
               </td>
             </tr>))}

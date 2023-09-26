@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '../base/button/Button';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/auth-context';
+import { userRole } from '../../utils/constants';
 
 const HeaderStyles = styled.div`
     padding: 18px 0px;
@@ -54,8 +55,13 @@ const HeaderStyles = styled.div`
 
     }
     .header-auth{
-        font-weight: 600;
-        cursor: pointer;
+        img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 100rem;
+            border: 1px solid #eee;
+        }
     }
     .search{
         position: relative;
@@ -94,10 +100,6 @@ const menuLinks = [
         title: "Contact"
     },
 ]
-const getLastName = (name) => {
-    if (!name) return "";
-    return name.charAt(0).toUpperCase() + name.slice(1)
-}
 const Header = () => {
     const { userInfo } = useAuth();
     return (
@@ -161,7 +163,14 @@ const Header = () => {
                             style={{ width: "140px", height: "44px" }}>Dashboard</Button>
                         {!userInfo ? <Button to="/sign-in" style={{ width: "120px", height: "44px" }} kind='primary'>Login</Button>
                             : <div className='header-auth'>
-                                {getLastName(userInfo?.email?.split("@")[0])}
+                                <Link to="/profile">
+                                    <div className="userInfo">
+                                        <img
+                                            src={userInfo?.avatar}
+                                            alt={userInfo?.username}
+                                        />
+                                    </div>
+                                </Link>
                             </div>}
                     </div>
                 </div>

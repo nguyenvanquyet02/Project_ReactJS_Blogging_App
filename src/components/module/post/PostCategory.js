@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+import PropTypes from 'prop-types';
+
 
 const PostCategoryStyles = styled.div`
     cursor: pointer;
@@ -22,7 +24,15 @@ const PostCategoryStyles = styled.div`
         background-color: ${props => props.theme.white};
     `};
 `;
-const PostCategory = ({ children, type = 'primary', to = "", className = '' }) => {
+/**
+ * 
+ * @param {*} type type of PostCategory 
+ * @param {*} children children of PostCategory 
+ * @param {*} to to (link) of PostCategory using with react hook form 
+ * @param {*} className className of PostCategory 
+ * @returns PostCategory
+ */
+const PostCategory = ({ children = {}, type = 'primary', to = "", className = '' }) => {
     return (
         <PostCategoryStyles type={type} className={`post-category ${className}`}>
             <Link to={`/category/${to}`}>
@@ -31,5 +41,10 @@ const PostCategory = ({ children, type = 'primary', to = "", className = '' }) =
         </PostCategoryStyles>
     );
 };
-
+PostCategory.prototype = {
+    children: PropTypes.any,
+    type: PropTypes.string,
+    to: PropTypes.string,
+    className: PropTypes.any
+}
 export default PostCategory;

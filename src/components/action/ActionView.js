@@ -1,6 +1,11 @@
 import React from "react";
-
-const ActionView = ({ onClick = () => {} }) => {
+import PropTypes from 'prop-types';
+/**
+ * 
+ * @param {*} onClick func onClick of ActionView
+ * @returns ActionView
+ */
+const ActionView = ({ onClick = () => { } }) => {
   return (
     <span
       className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer"
@@ -28,5 +33,7 @@ const ActionView = ({ onClick = () => {} }) => {
     </span>
   );
 };
-
+ActionView.prototype = {
+  onClick: PropTypes.func
+}
 export default ActionView;

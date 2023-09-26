@@ -18,20 +18,43 @@ const PostManage = () => {
   const [filter, setFilter] = useState("");
   const [lastDoc, setLastDoc] = useState({});
   const [total, setTotal] = useState(0);
+  const [selectCategory, setSelectCategoty] = useState("");
+  const [categories, setCategoties] = useState([]);
   const navigate = useNavigate();
+
+  // get categories data
+  useEffect(() => {
+    document.title = "Blogging App - Manager post"
+    async function getData() {
+      const colRef = collection(db, "categories")
+      const q = query(colRef, where("status", "==", 1))
+      const querySnapshot = await getDocs(q);
+      let result = [];
+      querySnapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      });
+      setCategoties(result);
+    }
+    getData();
+  }, []);
+  //get post
   useEffect(() => {
     async function fetchData() {
       const colref = collection(db, "posts");
-      const newRef = filter
-        ? query(
+      let newRef = query(colref, limit(POST_PER_PAGE));
+      if (selectCategory) {
+        newRef = query(colref, where("category.id", "==", selectCategory?.id));
+      }
+      if (filter) {
+        newRef = query(
           colref,
           where("title", ">=", filter),
-          where("title", "<=", filter + "utf8")
-        )
-        : query(colref, limit(POST_PER_PAGE));
-
+          where("title", "<=", filter + "utf8"))
+      }
       const documentSnapshots = await getDocs(newRef);
-
       // Get the last visible document (truoc)
       const lastVisible = documentSnapshots.docs[documentSnapshots.docs.length - 1];
       onSnapshot(colref, snapshot => {
@@ -51,11 +74,16 @@ const PostManage = () => {
       setLastDoc(lastVisible);
     }
     fetchData();
-  }, [filter]);
+  }, [filter, selectCategory]);
   // this func is used for handling debounce input filter
   const handleInputFilter = debounce((e) => {
     setFilter(e.target.value);
   }, 1000)
+  //this func is used for selecting item for dropdown
+  const handleClickOptionDropdown = async (item) => {
+    setSelectCategoty(item)
+  };
+  // this func is used for deleting category
   const handleDeleteCategory = async (postId) => {
     try {
       const docRef = doc(db, "posts", postId);
@@ -132,9 +160,20 @@ const PostManage = () => {
           Write new post
         </Button>
       </div>
+
       <div className="mb-6 flex gap-x-6  items-center justify-end">
-        <Dropdown className="w-[200px]">
-          <Dropdown.Select placeholder="Category"></Dropdown.Select>
+        <Dropdown >
+          <Dropdown.Select placeholder="Select status post"></Dropdown.Select>
+          <Dropdown.List>
+            {categories?.length > 0 && categories.map(category => (
+              <Dropdown.Option
+                key={category.id}
+                onClick={() => handleClickOptionDropdown(category)}
+              >
+                {category.name}
+              </Dropdown.Option>
+            ))}
+          </Dropdown.List>
         </Dropdown>
         <div className="w-full max-w-[300px] h-[55px]">
           <input

@@ -1,6 +1,11 @@
 import React from "react";
-
-const ActionEdit = ({ onClick = () => {} }) => {
+import PropTypes from 'prop-types';
+/**
+ * 
+ * @param {*} onClick func onClick of ActionEdit
+ * @returns ActionEdit
+ */
+const ActionEdit = ({ onClick = () => { } }) => {
   return (
     <span
       className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer"
@@ -23,5 +28,7 @@ const ActionEdit = ({ onClick = () => {} }) => {
     </span>
   );
 };
-
+ActionEdit.prototype = {
+  onClick: PropTypes.func
+}
 export default ActionEdit;

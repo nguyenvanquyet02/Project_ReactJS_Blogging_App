@@ -25,18 +25,6 @@ const CategoryPage = () => {
         }
         getDataPost();
     }, [params.slug]);
-    // get data category
-    // useEffect(() => {
-    //     async function getDataCategory() {
-    //         const docRef = query(collection(db, "categories"), where("slug", "==", params.slug));
-    //         onSnapshot(docRef, snapshot => {
-    //             snapshot.forEach(doc => {
-    //                 if (doc.data()) setCategory(doc.data())
-    //             });
-    //         })
-    //     }
-    //     getDataCategory()
-    // }, [params.slug]);
     if (!posts) return null;
     return (
         <Layout>

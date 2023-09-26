@@ -91,7 +91,7 @@ const PostAddNew = () => {
       setCategoties(result);
     }
     getData();
-  }, [])
+  }, []);
   // this function is used for submitting form add new post
   const addPostHandler = async (values) => {
     if (!isValid) return;
@@ -132,7 +132,7 @@ const PostAddNew = () => {
     })
     // set de hien thi giao dien
     setSelectCategoty(item)
-  }
+  };
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Add new post</h1>
