@@ -1,6 +1,11 @@
 import React from 'react';
 import { useDropdown } from './dropdown-context';
+import PropTypes from 'prop-types';
 
+/**
+ * @param {string} placeholder children Select of Dropdown 
+ * @returns Select of Dropdown
+ */
 const Select = ({ placeholder = '' }) => {
     const { show, toggle } = useDropdown();
     return (
@@ -45,5 +50,7 @@ const Select = ({ placeholder = '' }) => {
         </div>
     );
 };
-
+Select.prototype = {
+    placeholder: PropTypes.string,
+}
 export default Select;

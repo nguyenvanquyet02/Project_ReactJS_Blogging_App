@@ -23,7 +23,6 @@ const PostNewestLargeStyles = styled.div`
 `;
 
 const PostNewestLarge = ({ data = {} }) => {
-  console.log(data);
   if (!data.id) return null;
   //get date of post
   const date = data?.createdAt?.seconds ? new Date(data?.createdAt?.seconds * 1000) : new Date();

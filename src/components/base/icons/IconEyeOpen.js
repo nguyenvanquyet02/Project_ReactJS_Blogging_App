@@ -1,5 +1,12 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
+/**
+ * 
+ * @param {string} className className of IconEyeOpen 
+ * @param {*} onClick onClick of IconEyeOpen 
+ * @returns IconEyeOpen
+ */
 const IconEyeOpen = ({ className = "", onClick = () => { } }) => {
     return (
         <span className={className} onClick={onClick}>
@@ -28,5 +35,8 @@ const IconEyeOpen = ({ className = "", onClick = () => { } }) => {
         </span>
     );
 };
-
+IconEyeOpen.prototype = {
+    className: PropTypes.string,
+    onClick: PropTypes.any,
+}
 export default IconEyeOpen;

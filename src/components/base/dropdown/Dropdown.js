@@ -1,5 +1,11 @@
 import React from "react";
 import { DropdownProvider } from "./dropdown-context";
+import PropTypes from 'prop-types';
+
+/**
+ * @param {*} children children of Dropdown 
+ * @returns Dropdown
+ */
 const Dropdown = ({ children, ...props }) => {
   return (
     <DropdownProvider {...props}>
@@ -9,5 +15,7 @@ const Dropdown = ({ children, ...props }) => {
     </DropdownProvider>
   );
 };
-
+Dropdown.prototype = {
+  children: PropTypes.any,
+}
 export default Dropdown;

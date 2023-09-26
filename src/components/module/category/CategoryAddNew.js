@@ -2,19 +2,25 @@ import slugify from "slugify";
 import { categoryStatus, userRole } from "../../../utils/constants";
 import { Button, Radio, Field, Input, Label, FieldCheckboxes } from "../../index";
 import { DashboardHeading } from "../dashboard";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../contexts/auth-context";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
+const schema = yup.object({
+  name: yup.string().required("Name of the category is a required field!!!"),
+  slug: yup.string(),
+}).required();
 const CategoryAddNew = () => {
   const {
     control,
     watch,
     reset,
-    formState: { isSubmitting, isValid },
+    formState: { errors, isSubmitting, isValid },
     handleSubmit
   } = useForm({
     mode: "onChange",
@@ -23,9 +29,20 @@ const CategoryAddNew = () => {
       slug: "",
       status: categoryStatus.APPROVED,
       createdAt: new Date()
-    }
+    },
+    resolver: yupResolver(schema)
   });
+  // handle validate form
+  useEffect(() => {
+    const arrErrors = Object.values(errors)
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, {
+        pauseOnHover: false,
+      })
+    }
+  }, [errors])
   const watchStatus = watch("status");
+  // this func is used for adding new category
   const handleAddNewCategory = async (values) => {
     if (!isValid) return;
     values.status = +values.status;
@@ -70,7 +87,6 @@ const CategoryAddNew = () => {
               control={control}
               name="name"
               placeholder="Enter your category name"
-              required
             ></Input>
           </Field>
           <Field>

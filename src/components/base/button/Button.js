@@ -41,7 +41,6 @@ const ButtonStyles = styled.button`
  * @param {boolean} isLoading loading button
  * @param {string} kind kind of button ["primary", "secondary"]
  * @param {*} onClick Handler onClick
- * @requires
  * @param {string} type type of button: 'button' || 'submit'
  * @returns 
  */

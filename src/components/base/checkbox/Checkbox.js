@@ -1,6 +1,15 @@
 import React from "react";
 import { useController } from "react-hook-form";
+import PropTypes from 'prop-types';
 
+/**
+ * 
+ * @param {*} checked checked of checkbox 
+ * @param {*} children children of checkbox 
+ * @param {*} control control of checkbox using with react hook form 
+ * @param {*} name name of checkbox 
+ * @returns Checkbox
+ */
 const Checkbox = ({ checked, children, control, name, ...rest }) => {
   const { field } = useController({
     control,
@@ -10,7 +19,7 @@ const Checkbox = ({ checked, children, control, name, ...rest }) => {
   return (
     <label>
       <input
-        onChange={() => {}}
+        onChange={() => { }}
         checked={checked}
         type="checkbox"
         className="hidden-input"
@@ -19,9 +28,8 @@ const Checkbox = ({ checked, children, control, name, ...rest }) => {
       />
       <div className="flex items-center gap-x-3 font-medium cursor-pointer">
         <div
-          className={`w-7 h-7 rounded flex items-center justify-center ${
-            checked ? "bg-green-400 text-white" : "bg-gray-200 text-transparent"
-          }`}
+          className={`w-7 h-7 rounded flex items-center justify-center ${checked ? "bg-green-400 text-white" : "bg-gray-200 text-transparent"
+            }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -44,4 +52,10 @@ const Checkbox = ({ checked, children, control, name, ...rest }) => {
   );
 };
 
+Checkbox.prototype = {
+  checked: PropTypes.bool,
+  children: PropTypes.any,
+  control: PropTypes.any,
+  name: PropTypes.string,
+}
 export default Checkbox;

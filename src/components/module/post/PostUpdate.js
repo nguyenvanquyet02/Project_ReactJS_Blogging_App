@@ -15,9 +15,16 @@ import ImageUploader from "quill-image-uploader";
 import axios from "axios";
 import { imgbbAPI } from "../../../config/apiConfig";
 import slugify from "slugify";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 Quill.register("modules/imageUploader", ImageUploader);
 
+const schema = yup.object({
+  title: yup.string().required("Title of the post is a required field!!!"),
+  slug: yup.string(),
+  image_name: yup.string().required("Image of the post is a required field!!!")
+}).required();
 const PostUpdate = () => {
   // get param id of post
   const [params] = useSearchParams();
@@ -35,14 +42,23 @@ const PostUpdate = () => {
     setValue,
     getValues,
     handleSubmit,
-    formState: { isValid, isSubmitting }
+    formState: { errors, isValid, isSubmitting }
   } = useForm({
-    mode: "onChange"
+    mode: "onChange",
+    resolver: yupResolver(schema)
   })
   //watch hot and status of post
   const watchHot = watch("hot");
   const watchStatus = watch("status");
-
+  // handle validate form
+  useEffect(() => {
+    const arrErrors = Object?.values(errors)
+    if (arrErrors?.length > 0) {
+      toast.error(arrErrors[0]?.message, {
+        pauseOnHover: false,
+      })
+    }
+  }, [errors])
   // get data of post with post id
   useEffect(() => {
     async function getDataPost() {
@@ -165,7 +181,6 @@ const PostUpdate = () => {
               control={control}
               placeholder="Enter your title"
               name="title"
-              required
             ></Input>
           </Field>
           <Field>

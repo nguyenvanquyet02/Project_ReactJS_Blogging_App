@@ -12,7 +12,8 @@ const LabelStatusStyles = styled.span`
 /**
  *
  * @param type - "default" "success" "warning" "danger"
- * @returns
+ * @param children children of LabelStatus
+ * @returns LabelStatus
  */
 const LabelStatus = ({ children, type = "default" }) => {
   let styleClassName = "text-gray-500 bg-gray-100";

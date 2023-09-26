@@ -8,7 +8,14 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { userRole, userStatus } from "../../../utils/constants";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
+const schema = yup.object({
+  fullname: yup.string().required("Fullname is a required field!!!"),
+  email: yup.string().email().required("Please enter your email!"),
+  password: yup.string().min(8, "Your password must be at least 8 characters").required("Please enter your password!"),
+}).required();
 const UserUpdate = () => {
   const {
     control,
@@ -17,15 +24,25 @@ const UserUpdate = () => {
     reset,
     getValues,
     setValue,
-    formState: { isValid, isSubmitting },
+    formState: { errors, isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
+    resolver: yupResolver(schema)
   });
 
   const watchStatus = watch("status");
   const watchRole = watch("role");
   const [params] = useSearchParams();
   const userId = params.get("id");
+  // handle validate form
+  useEffect(() => {
+    const arrErrors = Object.values(errors)
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, {
+        pauseOnHover: false,
+      })
+    }
+  }, [errors])
   //get name image
   const deleteAvatar = async () => {
     const colRef = doc(db, "users", userId);

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useController } from "react-hook-form";
-
+import PropTypes from 'prop-types';
 const TextareaStyles = styled.div`
   position: relative;
   width: 100%;
@@ -26,8 +26,9 @@ const TextareaStyles = styled.div`
 `;
 /**
  *
- * @param {*} placeholder(optional) - Placeholder of Textarea
- * @param {*} name(optional) - name of Textarea
+ * @param {string} name - name of Textarea
+ * @param {string} type - type of Textarea
+ * @param {*} children - children of Textarea
  * @param {*} control - control from react hook form
  * @returns Textarea
  */
@@ -49,5 +50,10 @@ const Textarea = ({
     </TextareaStyles>
   );
 };
-
+Textarea.prototype = {
+  name: PropTypes.string,
+  type: PropTypes.string,
+  children: PropTypes.any,
+  control: PropTypes.any,
+}
 export default Textarea;

@@ -8,21 +8,37 @@ import { categoryStatus } from "../../../utils/constants";
 import { Button, Field, FieldCheckboxes, Input, Label, Radio } from "../../index";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
+const schema = yup.object({
+  name: yup.string().required("Name of the category is a required field!!!"),
+  slug: yup.string(),
+}).required();
 const CategoryUpdate = () => {
-  const { control, watch, reset, handleSubmit, formState: { isValid, isSubmitting } } = useForm({
+  const { control, watch, reset, handleSubmit, formState: { errors, isValid, isSubmitting } } = useForm({
     mode: "onChange",
     defaultValues: {
       name: "",
       slug: "",
       status: categoryStatus.APPROVED,
       createdAt: new Date()
-    }
+    },
+    resolver: yupResolver(schema)
   })
   const [params] = useSearchParams();
   const categoryId = params.get("id");
   const watchStatus = watch("status");
   const navigate = useNavigate();
+  // handle validate form
+  useEffect(() => {
+    const arrErrors = Object.values(errors)
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, {
+        pauseOnHover: false,
+      })
+    }
+  }, [errors])
   // get data category
   useEffect(() => {
     async function getDataCategory() {
@@ -67,7 +83,6 @@ const CategoryUpdate = () => {
               control={control}
               name="name"
               placeholder="Enter your category name"
-              required
             ></Input>
           </Field>
           <Field>

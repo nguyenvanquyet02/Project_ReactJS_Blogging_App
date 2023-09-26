@@ -11,6 +11,15 @@ import { Button, Radio, Field, FieldCheckboxes, Input, Label, ImageUpload } from
 import { DashboardHeading } from "../dashboard";
 import { useFirebaseImage } from "../../../hooks";
 import { useAuth } from "../../../contexts/auth-context";
+import { useEffect } from "react";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+
+const schema = yup.object({
+  fullname: yup.string().required("Fullname is a required field!!!"),
+  email: yup.string().email().required("Please enter your email!"),
+  password: yup.string().min(8, "Your password must be at least 8 characters").required("Please enter your password!"),
+}).required();
 
 const UserAddNew = () => {
   const {
@@ -20,7 +29,7 @@ const UserAddNew = () => {
     setValue,
     getValues,
     reset,
-    formState: { isValid, isSubmitting }
+    formState: { errors, isValid, isSubmitting }
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -31,6 +40,7 @@ const UserAddNew = () => {
       status: userStatus.ACTIVE,
       role: userRole.USER
     },
+    resolver: yupResolver(schema)
   });
   const {
     image,
@@ -42,7 +52,16 @@ const UserAddNew = () => {
   } = useFirebaseImage(setValue, getValues);
   const watchStatus = watch("status");
   const watchRole = watch("role");
-
+  // handle validate form
+  useEffect(() => {
+    const arrErrors = Object.values(errors)
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, {
+        pauseOnHover: false,
+      })
+    }
+  }, [errors])
+  // this func is used for creating new user
   const handleCreateUser = async (values) => {
     if (!isValid) return;
     try {
@@ -96,7 +115,6 @@ const UserAddNew = () => {
             handleDeleteImage={handleDeleteImage}
             image={image}
             progress={progress}
-
             className="!rounded-full h-full"
           ></ImageUpload>
         </div>
@@ -107,7 +125,6 @@ const UserAddNew = () => {
               name="fullname"
               placeholder="Enter your fullname"
               control={control}
-              required
             ></Input>
           </Field>
           <Field>
@@ -127,7 +144,6 @@ const UserAddNew = () => {
               placeholder="Enter your email"
               control={control}
               type="email"
-              required
             ></Input>
           </Field>
           <Field>
@@ -137,7 +153,6 @@ const UserAddNew = () => {
               placeholder="Enter your password"
               control={control}
               type="password"
-              required
             ></Input>
           </Field>
         </div>

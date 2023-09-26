@@ -1,6 +1,13 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
-
+/**
+ * 
+ * @param {*} name field name of ImageUpload
+ * @param {*} className className of ImageUpload
+ * @param {*} progress progress of ImageUpload
+ * @param {*} image field image of ImageUpload
+ * @returns ImageUpload
+ */
 const ImageUpload = (props) => {
   const {
     name = "image",

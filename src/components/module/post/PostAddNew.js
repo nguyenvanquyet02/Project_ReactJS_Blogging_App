@@ -10,10 +10,18 @@ import { db } from "../../../firebase/firebase-config";
 import { useFirebaseImage } from "../../../hooks";
 import { useAuth } from "../../../contexts/auth-context";
 import { toast } from "react-toastify";
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
+
+const schema = yup.object({
+  title: yup.string().required("Title of the post is a required field!!!"),
+  slug: yup.string(),
+  image_name: yup.string().required("Image of the post is a required field!!!")
+}).required();
 
 const PostAddNewStyles = styled.div``;
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit, getValues, reset, formState: { isValid, isSubmitting } } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues, reset, formState: { errors, isValid, isSubmitting } } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -24,13 +32,22 @@ const PostAddNew = () => {
       image: "",
       user: {}
     },
+    resolver: yupResolver(schema)
   });
   const { userInfo } = useAuth();
   const [categories, setCategoties] = useState([]);
   const [selectCategory, setSelectCategoty] = useState("");
   const watchStatus = watch("status");
   const watchHot = watch("hot");
-
+  // handle validate form
+  useEffect(() => {
+    const arrErrors = Object.values(errors)
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, {
+        pauseOnHover: false,
+      })
+    }
+  }, [errors])
   // get data user add post
   useEffect(() => {
     if (!userInfo.email) return;
@@ -81,7 +98,6 @@ const PostAddNew = () => {
     try {
       values.slug = slugify(values.slug || values.title, { lower: true });
       values.status = +values.status;
-      console.log(values);
       const colRef = collection(db, "posts");
       await addDoc(colRef, {
         ...values,
@@ -128,7 +144,6 @@ const PostAddNew = () => {
               control={control}
               placeholder="Enter your title"
               name="title"
-              required
             ></Input>
           </Field>
           <Field>

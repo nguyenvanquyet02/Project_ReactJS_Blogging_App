@@ -85,11 +85,6 @@ const UserTable = () => {
         break;
     }
   }
-  // const rederUserItem = (user) => {
-  //   if (!user) return null;
-  //   return (
-  //     )
-  // }
   // phan quyen chi admin moi ca the truy cap
   const { userInfo } = useAuth();
   if (+userInfo.role !== userRole.ADMIN) return null;

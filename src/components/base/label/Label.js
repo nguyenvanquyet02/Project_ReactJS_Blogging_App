@@ -9,9 +9,10 @@ const LabelStyles = styled.label`
 `;
 /**
  * 
- * @param {*} children  
- * @param {string} htmlFor  
- * @returns 
+ * @param {*} children children of Label
+ * @param {string} htmlFor  htmlFor of Label
+ * @param {string} className  className of Label
+ * @returns Label
  */
 const Label = ({ htmlFor = "", children, className = "", ...props }) => {
     return (
@@ -25,6 +26,7 @@ const Label = ({ htmlFor = "", children, className = "", ...props }) => {
     );
 };
 Label.prototype = {
+    className: PropTypes.string,
     htmlFor: PropTypes.string,
     children: PropTypes.node
 }

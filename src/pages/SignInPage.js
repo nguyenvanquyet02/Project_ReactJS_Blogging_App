@@ -35,7 +35,7 @@ const SignInPage = () => {
     const handleSignIn = async (values) => {
         if (!isValid) return;
         await signInWithEmailAndPassword(auth, values.email, values.password);
-        navigate("/")
+        navigate("/");
     }
     useEffect(() => {
         const arrErrors = Object.values(errors)

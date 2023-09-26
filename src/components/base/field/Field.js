@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types'
 /**
  * Created by Celine Maris
- * 
+ * @param {*} children children of  Field
+ * @returns Field
  */
 const FieldStyles = styled.div`
     display: flex;
