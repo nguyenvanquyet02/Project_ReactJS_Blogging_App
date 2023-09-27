@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { signOut } from 'firebase/auth'
 import { auth } from '../../../firebase/firebase-config'
+import { useAuth } from "../../../contexts/auth-context";
+import { userRole } from "../../../utils/constants";
 const SidebarStyles = styled.div`
   width: 230px;
   background: #ffffff;
@@ -135,7 +137,8 @@ const sidebarLinks = [
   },
 ];
 const Sidebar = () => {
-
+  const { userInfo } = useAuth();
+  console.log(userInfo)
   return (
     <SidebarStyles className="sidebar">
 
@@ -146,6 +149,11 @@ const Sidebar = () => {
             <span className="menu-text">{link.title}</span>
           </div>
         )
+        if (link.title === "User") {
+          if (+userInfo?.role === userRole.USER) {
+            link.url = "/profile";
+          }
+        }
         return (
           <NavLink to={link.url} className="menu-item" key={link.title}>
             <span className="menu-icon">{link.icon}</span>

@@ -158,9 +158,17 @@ const Header = () => {
                                 </svg>
                             </span>
                         </div>
-                        <Button
-                            to="/dashboard"
-                            style={{ width: "140px", height: "44px" }}>Dashboard</Button>
+                        {userInfo && Number(userInfo.role) === userRole.ADMIN ?
+                            <Button
+                                to="/dashboard"
+                                style={{ width: "140px", height: "44px" }}
+                            >
+                                Dashboard
+                            </Button>
+                            : <Button to="/manage/add-post" className="header-button" height="52px">
+                                Write new post
+                            </Button>
+                        }
                         {!userInfo ? <Button to="/sign-in" style={{ width: "120px", height: "44px" }} kind='primary'>Login</Button>
                             : <div className='header-auth'>
                                 <Link to="/profile">
