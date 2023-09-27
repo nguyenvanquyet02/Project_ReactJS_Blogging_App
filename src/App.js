@@ -11,17 +11,17 @@ const SignUpPage = React.lazy(() => import("./pages/SignUpPage"));
 const PostDetailsPage = React.lazy(() => import("./pages/PostDetailsPage"));
 const NotFoundPage = React.lazy(() => import("./pages/NotFoundPage"));
 const AuthorPage = React.lazy(() => import("./pages/AuthorPage"));
-const UserUpdate = React.lazy(() => import(".//components/module/user/UserUpdate"));
-const UserAddNew = React.lazy(() => import(".//components/module/user/UserAddNew"));
-const UserManage = React.lazy(() => import(".//components/module/user/UserManage"));
-const UserProfile = React.lazy(() => import(".//components/module/user/UserProfile"));
-const PostManage = React.lazy(() => import(".//components/module/post/PostManage"));
-const PostAddNew = React.lazy(() => import(".//components/module/post/PostAddNew"));
-const PostUpdate = React.lazy(() => import(".//components/module/post/PostUpdate"));
-const CategoryAddNew = React.lazy(() => import(".//components/module/category/CategoryAddNew"));
-const CategoryManage = React.lazy(() => import(".//components/module/category/CategoryManage"));
-const CategoryUpdate = React.lazy(() => import(".//components/module/category/CategoryUpdate"));
-const DashboardLayout = React.lazy(() => import(".//components/module/dashboard/DashboardLayout"));
+const UserUpdate = React.lazy(() => import("./components/module/user/UserUpdate"));
+const UserAddNew = React.lazy(() => import("./components/module/user/UserAddNew"));
+const UserManage = React.lazy(() => import("./components/module/user/UserManage"));
+const UserProfile = React.lazy(() => import("./components/module/user/UserProfile"));
+const PostManage = React.lazy(() => import("./components/module/post/PostManage"));
+const PostAddNew = React.lazy(() => import("./components/module/post/PostAddNew"));
+const PostUpdate = React.lazy(() => import("./components/module/post/PostUpdate"));
+const CategoryAddNew = React.lazy(() => import("./components/module/category/CategoryAddNew"));
+const CategoryManage = React.lazy(() => import("./components/module/category/CategoryManage"));
+const CategoryUpdate = React.lazy(() => import("./components/module/category/CategoryUpdate"));
+const DashboardLayout = React.lazy(() => import("./components/module/dashboard/DashboardLayout"));
 function App() {
   return (
     <div>
