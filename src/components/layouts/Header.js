@@ -65,13 +65,13 @@ const HeaderStyles = styled.div`
     }
     .search{
         position: relative;
-        height: 44px;
+        height: 50px;
         padding-left: 20px;
         padding-right: 48px;
         border: 1px solid #ccc;
         border-radius: 8px;
         width: 100%;
-        max-width: 320px;
+        max-width: 240px;
         display: flex;
         align-items: center;
     }
@@ -107,9 +107,9 @@ const Header = () => {
             <div className='container'>
                 <div className='header-main'>
                     <div className='logo-container'>
-                        <NavLink to='/'>
+                        <Link to='/'>
                             <img srcSet='/logo.png 3x' alt='logo' className='logo' />
-                        </NavLink>
+                        </Link>
                         <p className='title-logo'>Blogging App</p>
                     </div>
                     <ul className='menu'>
@@ -158,18 +158,19 @@ const Header = () => {
                                 </svg>
                             </span>
                         </div>
-                        {userInfo && Number(userInfo.role) === userRole.ADMIN ?
+                        {userInfo && Number(userInfo?.role) === userRole.ADMIN &&
                             <Button
                                 to="/dashboard"
-                                style={{ width: "140px", height: "44px" }}
+                                style={{ width: "140px", height: "50px" }}
                             >
                                 Dashboard
                             </Button>
-                            : <Button to="/manage/add-post" className="header-button" height="52px">
-                                Write new post
-                            </Button>
+
                         }
-                        {!userInfo ? <Button to="/sign-in" style={{ width: "120px", height: "44px" }} kind='primary'>Login</Button>
+                        {userInfo && Number(userInfo?.role) !== userRole.ADMIN && <Button to="/manage/add-post" className="header-button" height="50px">
+                            Write new post
+                        </Button>}
+                        {!userInfo ? <Button to="/sign-in" style={{ width: "120px", height: "50px" }} kind='primary'>Login</Button>
                             : <div className='header-auth'>
                                 <Link to="/profile">
                                     <div className="userInfo">

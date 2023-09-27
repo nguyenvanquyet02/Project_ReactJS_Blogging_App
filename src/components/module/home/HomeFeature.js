@@ -26,6 +26,7 @@ const HomeFeature = () => {
       setPosts(result);
     });
   }, []);
+  console.log(posts);
   if (posts.length <= 0) return null;
   return (
     <HomeFeatureStyles className="home-block">

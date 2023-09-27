@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { Button, Field, ImageUpload, Input, Label, Radio, Toggle } from "../../index";
 import { Dropdown } from "../../base/dropdown";
-import { categoryStatus, postStatus } from "../../../utils/constants";
+import { categoryStatus, postStatus, userRole } from "../../../utils/constants";
 import { toast } from "react-toastify";
 import { collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
@@ -17,6 +17,7 @@ import { imgbbAPI } from "../../../config/apiConfig";
 import slugify from "slugify";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { useAuth } from "../../../contexts/auth-context";
 
 Quill.register("modules/imageUploader", ImageUploader);
 
@@ -29,7 +30,7 @@ const PostUpdate = () => {
   // get param id of post
   const [params] = useSearchParams();
   const postId = params.get("id");
-
+  const { userInfo } = useAuth();
 
   const [selectCategory, setSelectCategoty] = useState({});
   const [categories, setCategoties] = useState([]);
@@ -204,7 +205,7 @@ const PostUpdate = () => {
             />
           </Field>
           <div className="flex flex-col gap-y-8">
-            <Field>
+            {+userInfo?.role === userRole.ADMIN && <Field>
               <Label>Status</Label>
               <div className="flex items-center gap-x-5">
                 <Radio
@@ -232,14 +233,14 @@ const PostUpdate = () => {
                   Reject
                 </Radio>
               </div>
-            </Field>
+            </Field>}
             <div className="flex justify-between items-center">
-              <Field>
+              {+userInfo?.role === userRole.ADMIN && <Field>
                 <Label>Feature post</Label>
                 <Toggle
                   on={watchHot === true} onClick={() => setValue("hot", !watchHot)}
                 />
-              </Field>
+              </Field>}
               <Field>
                 <div className="w-[300px]">
                   <Label className="mb-2 inline-block">Category</Label>
@@ -263,18 +264,16 @@ const PostUpdate = () => {
             </div>
           </div>
         </div>
-        <div>
-          <Field>
-            <Label>Content</Label>
-            <div className="w-full entry-content">
-              <ReactQuill
-                modules={modules}
-                theme="snow"
-                value={content}
-                onChange={setContent} />
-            </div>
-          </Field>
-        </div>
+        <Field>
+          <Label>Content</Label>
+          <div className="w-full entry-content">
+            <ReactQuill
+              modules={modules}
+              theme="snow"
+              value={content}
+              onChange={setContent} />
+          </div>
+        </Field>
         <Button
           type="submit"
           className="mx-auto mt-10"

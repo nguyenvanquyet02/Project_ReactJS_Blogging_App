@@ -4,7 +4,7 @@ import { Dropdown } from "../../base/dropdown";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from 'slugify'
-import { postStatus } from "../../../utils/constants";
+import { postStatus, userRole } from "../../../utils/constants";
 import { addDoc, collection, doc, getDoc, getDocs, query, serverTimestamp, where } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
 import { useFirebaseImage } from "../../../hooks";
@@ -12,6 +12,14 @@ import { useAuth } from "../../../contexts/auth-context";
 import { toast } from "react-toastify";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import ReactQuill, { Quill } from "react-quill";
+import ImageUploader from "quill-image-uploader";
+import { useMemo } from "react";
+import axios from "axios";
+import { imgbbAPI } from "../../../config/apiConfig";
+
+
+Quill.register("modules/imageUploader", ImageUploader);
 
 const schema = yup.object({
   title: yup.string().required("Title of the post is a required field!!!"),
@@ -26,7 +34,8 @@ const PostAddNew = () => {
     defaultValues: {
       title: "",
       slug: "",
-      status: 2,
+      content: "",
+      status: +postStatus.PENDING,
       category: {},
       hot: false,
       image: "",
@@ -37,6 +46,7 @@ const PostAddNew = () => {
   const { userInfo } = useAuth();
   const [categories, setCategoties] = useState([]);
   const [selectCategory, setSelectCategoty] = useState("");
+  const [content, setContent] = useState("");
   const watchStatus = watch("status");
   const watchHot = watch("hot");
   // handle validate form
@@ -60,7 +70,6 @@ const PostAddNew = () => {
           ...doc.data()
         })
       })
-
     }
     getDataUser()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,7 +103,7 @@ const PostAddNew = () => {
   }, []);
   // this function is used for submitting form add new post
   const addPostHandler = async (values) => {
-    if (!isValid) return;
+    // if (!isValid) return;
     try {
       values.slug = slugify(values.slug || values.title, { lower: true });
       values.status = +values.status;
@@ -102,13 +111,15 @@ const PostAddNew = () => {
       await addDoc(colRef, {
         ...values,
         image,
+        content,
         createdAt: serverTimestamp(),
       })
       toast.success("Create new post successfully!!!");
       reset({
         title: "",
         slug: "",
-        status: postStatus.PENDING,
+        content: "",
+        status: +postStatus.PENDING,
         category: {},
         hot: false,
         image: "",
@@ -117,7 +128,9 @@ const PostAddNew = () => {
       // reset image
       handleResetImage();
       setSelectCategoty({});
+      console.log(values)
     } catch (error) {
+      toast.error("Create post failed!!!");
       console.log(error);
     }
   }
@@ -133,9 +146,39 @@ const PostAddNew = () => {
     // set de hien thi giao dien
     setSelectCategoty(item)
   };
+  // input content upload image
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote"],
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["link", "image"],
+      ],
+      imageUploader: {
+        // imgbbAPI
+        upload: async (file) => {
+          console.log("upload: ~ file", file);
+          const bodyFormData = new FormData();
+          console.log("upload: ~ bodyFormData", bodyFormData);
+          bodyFormData.append("image", file);
+          const response = await axios({
+            method: "post",
+            url: imgbbAPI,
+            data: bodyFormData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          return response.data.data.url;
+        },
+      },
+    }), []);
   return (
     <PostAddNewStyles>
-      <h1 className="dashboard-heading">Add new post</h1>
+      <h1 className="dashboard-heading">Write new post</h1>
       <form onSubmit={handleSubmit(addPostHandler)}>
         <div className="grid grid-cols-2 gap-x-10 mb-2">
           <Field>
@@ -161,7 +204,7 @@ const PostAddNew = () => {
             <ImageUpload name="image" onChange={handleSelectImage} progress={progress} image={image} handleDeleteImage={handleDeleteImage} />
           </Field>
           <div className="flex flex-col gap-y-8">
-            <Field>
+            {+userInfo?.role === userRole.ADMIN && <Field>
               <Label>Status</Label>
               <div className="flex items-center gap-x-5">
                 <Radio
@@ -189,12 +232,12 @@ const PostAddNew = () => {
                   Reject
                 </Radio>
               </div>
-            </Field>
+            </Field>}
             <div className="flex justify-between items-center">
-              <Field>
+              {+userInfo?.role === userRole.ADMIN && <Field>
                 <Label>Feature post</Label>
                 <Toggle on={watchHot === true} onClick={() => setValue("hot", !watchHot)}></Toggle>
-              </Field>
+              </Field>}
               <Field>
                 <div className="w-[300px]">
                   <Label className="mb-2 inline-block">Category</Label>
@@ -216,6 +259,16 @@ const PostAddNew = () => {
             </div>
           </div>
         </div>
+        <Field>
+          <Label>Content</Label>
+          <div className="w-full entry-content">
+            <ReactQuill
+              modules={modules}
+              theme="snow"
+              value={content}
+              onChange={setContent} />
+          </div>
+        </Field>
         <Button
           type="submit"
           className="mx-auto mt-10"

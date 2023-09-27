@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { postStatus, userRole } from "../../../utils/constants";
+import { categoryStatus, postStatus, userRole } from "../../../utils/constants";
 import { useAuth } from "../../../contexts/auth-context";
 
 const POST_PER_PAGE = 3;
@@ -21,13 +21,13 @@ const PostManage = () => {
   const [selectCategory, setSelectCategoty] = useState("");
   const [categories, setCategoties] = useState([]);
   const navigate = useNavigate();
-
+  const { userInfo } = useAuth();
   // get categories data
   useEffect(() => {
     document.title = "Blogging App - Manager post"
     async function getData() {
       const colRef = collection(db, "categories")
-      const q = query(colRef, where("status", "==", 1))
+      const q = query(colRef, where("status", "==", categoryStatus.APPROVED))
       const querySnapshot = await getDocs(q);
       let result = [];
       querySnapshot.forEach((doc) => {
@@ -44,15 +44,13 @@ const PostManage = () => {
   useEffect(() => {
     async function fetchData() {
       const colref = collection(db, "posts");
-      let newRef = query(colref, limit(POST_PER_PAGE));
-      if (selectCategory) {
-        newRef = query(colref, where("category.id", "==", selectCategory?.id));
+      let newRef;
+      if (Number(userInfo?.role) !== userRole.ADMIN) {
+        newRef = query(colref, where("user.id", "==", userInfo?.uid));
       }
-      if (filter) {
-        newRef = query(
-          colref,
-          where("title", ">=", filter),
-          where("title", "<=", filter + "utf8"))
+      else {
+        newRef = query(colref, limit(POST_PER_PAGE));
+        // newRef = query(colref, where("category.id", "==", selectCategory?.id));
       }
       const documentSnapshots = await getDocs(newRef);
       // Get the last visible document (truoc)
@@ -62,19 +60,35 @@ const PostManage = () => {
       })
       // sd onSnapshot - realtime
       onSnapshot(newRef, snapshot => {
-        const result = [];
+        let result = [];
         snapshot.forEach(doc => {
           result.push({
             id: doc.id,
             ...doc.data()
           })
         })
+        if (selectCategory?.id) {
+          result = result.filter(function (post) {
+            if (post?.category?.id === selectCategory?.id) {
+              return post;
+            }
+            return null;
+          })
+        }
+        if (filter) {
+          result = result.filter(function (post) {
+            if (post?.title.includes(filter)) {
+              return post;
+            }
+            return null;
+          })
+        }
         setPostList(result);
       });
       setLastDoc(lastVisible);
     }
     fetchData();
-  }, [filter, selectCategory]);
+  }, [filter, selectCategory, userInfo?.role, userInfo?.uid]);
   // this func is used for handling debounce input filter
   const handleInputFilter = debounce((e) => {
     setFilter(e.target.value);
@@ -149,8 +163,7 @@ const PostManage = () => {
     setLastDoc(lastVisible);
   }
   // phan quyen chi admin moi ca the truy cap
-  const { userInfo } = useAuth();
-  if (+userInfo.role !== userRole.ADMIN) return null;
+  // if (+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <div className="flex justify-between">
