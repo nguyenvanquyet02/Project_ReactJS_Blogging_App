@@ -138,7 +138,6 @@ const sidebarLinks = [
 ];
 const Sidebar = () => {
   const { userInfo } = useAuth();
-  // console.log(userInfo)
   return (
     <SidebarStyles className="sidebar">
 
