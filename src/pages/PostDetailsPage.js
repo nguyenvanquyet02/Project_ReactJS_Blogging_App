@@ -9,6 +9,7 @@ import { db } from "../firebase/firebase-config";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { AuthorBox } from "../components/author";
 import slugify from "slugify";
+import { CommentContainer } from "../components/module/comment";
 
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
@@ -143,6 +144,7 @@ const PostDetailsPage = () => {
               {parse(postInfo.content || "")}
             </div>
             <AuthorBox userId={postInfo?.user?.id} />
+            <CommentContainer />
           </div>
           <PostRelated categoryId={postInfo?.category?.id} />
         </div>
