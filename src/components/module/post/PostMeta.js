@@ -17,12 +17,6 @@ const PostMetaStyles = styled.div`
       background-color: currentColor;
       border-radius: 100rem;
     }
-    .time{
-
-    }
-    .author{
-        
-    }
 `;
 const PostMeta = ({ date = 'July 30', authorName = "Celine Maris", className = '', to = "/" }) => {
     return (

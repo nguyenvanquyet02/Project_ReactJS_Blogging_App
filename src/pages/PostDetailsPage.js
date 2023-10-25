@@ -118,6 +118,7 @@ const PostDetailsPage = () => {
   }, [slug]);
   if (!slug) return <NotFoundPage />
   if (!postInfo.title) return null;
+  console.log(postInfo.id);
   return (
     <PostDetailsPageStyles>
       <Layout>
@@ -144,7 +145,7 @@ const PostDetailsPage = () => {
               {parse(postInfo.content || "")}
             </div>
             <AuthorBox userId={postInfo?.user?.id} />
-            <CommentContainer />
+            <CommentContainer postId={postInfo.id} />
           </div>
           <PostRelated categoryId={postInfo?.category?.id} />
         </div>

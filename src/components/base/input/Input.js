@@ -52,7 +52,7 @@ const InputStyles = styled.div`
  * @returns Input
  */
 const Input = ({ name = "", type = "text", children,
-  control, ...props }) => {
+  control, onFocus = () => { }, ...props }) => {
   const { field } = useController({
     control,
     name,
@@ -60,7 +60,7 @@ const Input = ({ name = "", type = "text", children,
   })
   return (
     <InputStyles hasIcon={children ? true : false}>
-      <input type={type} id={name} {...field} {...props} />
+      <input onFocus={onFocus} type={type} id={name} {...field} {...props} />
       {children ? <div className='input-icon'>{children}</div> : null}
     </InputStyles>
   );

@@ -40,7 +40,7 @@ const CategoryAddNew = () => {
         pauseOnHover: false,
       })
     }
-  }, [errors])
+  }, [errors]);
   const watchStatus = watch("status");
   // this func is used for adding new category
   const handleAddNewCategory = async (values) => {
@@ -64,7 +64,6 @@ const CategoryAddNew = () => {
     } catch (error) {
       toast.error("Creating a new category failed!!!")
       console.log("ERROR: ", error);
-    } finally {
     }
   }
   // phan quyen chi admin moi ca the truy cap
