@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkreact_monkey_blogging_boilerplate=self.webpackChunkreact_monkey_blogging_boilerplate||[]).push([[476],{476:function(e,a,n){n.r(a);n(2791);var l=n(9808),r=n(3585),o=n(184);a.default=function(){return+(0,l.a)().userInfo.role!==r.xZ.ADMIN?null:(0,o.jsx)("div",{children:(0,o.jsx)("h1",{className:"dashboard-heading",children:"Dashboard page"})})}}}]);
+//# sourceMappingURL=476.700462ff.chunk.js.map
